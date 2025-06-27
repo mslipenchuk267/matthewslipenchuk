@@ -50,7 +50,7 @@ export default function Home() {
             <h2 className="text-2xl font-semibold mb-3">About Me</h2>
             <p className="text-gray-700">I&apos;m a Software Engineer with 6 years of experience in the healthcare and medical device industry. 
               I have built full-stack solutions across distributed service based architectures. 
-              My work spans from embedded systems to cloud services. I have led frontend and backend teams, implenting secure authentication systems, high-volume data pipelines, and bespoke visualizations.
+              My work spans from embedded systems to cloud services. I have led frontend and backend teams, implented secure communication systems, high-volume data pipelines, and bespoke visualizations.
             </p>
             <br />
             <p className="text-gray-700">
