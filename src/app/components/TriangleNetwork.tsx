@@ -15,9 +15,22 @@ export default function TriangleNetwork() {
     /* retina-proof sizing - MOBILE-FOCUSED METHOD */
     let width = 0, height = 0;
     
+    // Use visual viewport if available (prevents URL bar issues)
+    const getViewportDimensions = () => {
+      if (window.visualViewport) {
+        return {
+          width: window.visualViewport.width,
+          height: window.visualViewport.height
+        };
+      }
+      return {
+        width: window.innerWidth,
+        height: window.innerHeight
+      };
+    };
+    
     function resizeCanvas() {
-      const cssW = window.innerWidth;
-      const cssH = window.innerHeight;
+      const { width: cssW, height: cssH } = getViewportDimensions();
       const ratio = window.devicePixelRatio || 1;
 
       // Store logical dimensions first
@@ -52,6 +65,10 @@ export default function TriangleNetwork() {
     const FRICTION  = 0.98;                   // < 1 = gradual slowing   ★ changed
     const SPEED_CAP = 220;                    // less frantic top speed  ★ changed
 
+    // Transition settings
+    const FADE_IN_SPEED = 3.0;   // How fast lines fade in
+    const FADE_OUT_SPEED = 2.0;  // How fast lines fade out
+
     /* ────────── NODES ────────── */
     interface Node { x: number; y: number; vx: number; vy: number }
     const nodes: Node[] = Array.from({ length: NODE_COUNT }, () => ({
@@ -61,8 +78,13 @@ export default function TriangleNetwork() {
       vy: 0,
     }));
 
-    /* ────────── EDGE STATE ────────── */
-    let prevEdges = new Set<string>();
+    /* ────────── EDGE STATE WITH OPACITY ────────── */
+    interface EdgeState {
+      opacity: number;
+      active: boolean;
+    }
+    
+    const edgeStates = new Map<string, EdgeState>();
     const linkDistSq  = LINK_DIST  * LINK_DIST;
     const breakDistSq = BREAK_DIST * BREAK_DIST;
     const key = (i: number, j: number) => (i < j ? `${i}-${j}` : `${j}-${i}`);
@@ -107,14 +129,15 @@ export default function TriangleNetwork() {
         n.y = ((n.y % height) + height) % height;
       }
 
-      /* 2. compute edges */
+      /* 2. compute current valid edges */
       const degree = new Array(NODE_COUNT).fill(0);
-      const edges: { i: number; dx: number; dy: number; d: number }[] = [];
-      const nextEdges = new Set<string>();
+      const validEdges = new Set<string>();
 
-      // keep previous edges if still within BREAK_DIST
-      for (const id of prevEdges) {
-        const [iStr, jStr] = id.split('-');
+      // Check existing edges first (for degree calculation)
+      for (const [edgeId, state] of edgeStates) {
+        if (state.opacity <= 0) continue;
+        
+        const [iStr, jStr] = edgeId.split('-');
         const i = +iStr, j = +jStr;
         const a = nodes[i], b = nodes[j];
         const dx = torusDiff(a.x - b.x, width);
@@ -122,50 +145,98 @@ export default function TriangleNetwork() {
         const d2 = dx*dx + dy*dy;
 
         if (d2 <= breakDistSq && degree[i] < DEGREE_CAP && degree[j] < DEGREE_CAP) {
-          const d = Math.sqrt(d2);
-          degree[i]++; degree[j]++;
-          edges.push({ i, dx, dy, d });
-          nextEdges.add(id);
+          degree[i]++; 
+          degree[j]++;
+          validEdges.add(edgeId);
         }
       }
 
-      // add new edges
-      const cand: { i: number; j: number; dx: number; dy: number; d: number }[] = [];
+      // Find new potential edges
+      const candidates: { id: string; i: number; j: number; d: number }[] = [];
       for (let i = 0; i < NODE_COUNT - 1; i++) {
         const a = nodes[i];
         for (let j = i + 1; j < NODE_COUNT; j++) {
-          const id = key(i, j);
-          if (nextEdges.has(id)) continue;
+          const edgeId = key(i, j);
+          if (validEdges.has(edgeId)) continue;
+          
           const b = nodes[j];
           const dx = torusDiff(a.x - b.x, width);
           const dy = torusDiff(a.y - b.y, height);
           const d2 = dx*dx + dy*dy;
-          if (d2 <= linkDistSq) cand.push({ i, j, dx, dy, d: Math.sqrt(d2) });
+          
+          if (d2 <= linkDistSq) {
+            candidates.push({ id: edgeId, i, j, d: Math.sqrt(d2) });
+          }
         }
       }
-      cand.sort((p, q) => p.d - q.d);
-      for (const { i, j, dx, dy, d } of cand) {
+
+      // Sort by distance and add valid new edges
+      candidates.sort((p, q) => p.d - q.d);
+      for (const { id, i, j } of candidates) {
         if (degree[i] < DEGREE_CAP && degree[j] < DEGREE_CAP) {
-          degree[i]++; degree[j]++;
-          edges.push({ i, dx, dy, d });
-          nextEdges.add(key(i, j));
+          degree[i]++; 
+          degree[j]++;
+          validEdges.add(id);
         }
       }
 
-      prevEdges = nextEdges;
+      /* 3. update edge states */
+      // Mark current valid edges as active
+      for (const [edgeId, state] of edgeStates) {
+        state.active = validEdges.has(edgeId);
+      }
 
-      /* 3. draw */
+      // Create new edge states for new edges
+      for (const edgeId of validEdges) {
+        if (!edgeStates.has(edgeId)) {
+          edgeStates.set(edgeId, { opacity: 0, active: true });
+        }
+      }
+
+      // Update opacities
+      const edgesToRemove: string[] = [];
+      for (const [edgeId, state] of edgeStates) {
+        if (state.active) {
+          // Fade in
+          state.opacity = Math.min(1, state.opacity + FADE_IN_SPEED * dt);
+        } else {
+          // Fade out
+          state.opacity = Math.max(0, state.opacity - FADE_OUT_SPEED * dt);
+          if (state.opacity <= 0) {
+            edgesToRemove.push(edgeId);
+          }
+        }
+      }
+
+      // Clean up fully faded edges
+      for (const edgeId of edgesToRemove) {
+        edgeStates.delete(edgeId);
+      }
+
+      /* 4. draw edges with smooth opacity */
       ctx.lineWidth = 1;
-      for (const { i, dx, dy, d } of edges) {
-        const a = nodes[i];
-        ctx.strokeStyle = `rgba(139,69,19,${1 - d / LINK_DIST})`;
+      for (const [edgeId, state] of edgeStates) {
+        if (state.opacity <= 0) continue;
+
+        const [iStr, jStr] = edgeId.split('-');
+        const i = +iStr, j = +jStr;
+        const a = nodes[i], b = nodes[j];
+        const dx = torusDiff(a.x - b.x, width);
+        const dy = torusDiff(a.y - b.y, height);
+        const d = Math.sqrt(dx*dx + dy*dy);
+
+        // Combine distance-based alpha with fade opacity
+        const distanceAlpha = 1 - d / LINK_DIST;
+        const finalAlpha = distanceAlpha * state.opacity;
+
+        ctx.strokeStyle = `rgba(139,69,19,${finalAlpha})`;
         ctx.beginPath();
         ctx.moveTo(a.x, a.y);
         ctx.lineTo(a.x - dx, a.y - dy);
         ctx.stroke();
       }
 
-      /* 4. draw nodes */
+      /* 5. draw nodes */
       ctx.fillStyle = '#8B4513';
       for (const n of nodes) ctx.fillRect(n.x - 1, n.y - 1, 2, 2);
 
@@ -174,20 +245,72 @@ export default function TriangleNetwork() {
     requestAnimationFrame(animate);
 
     /* ────────── RESIZE ────────── */
+    let resizeTimeout: NodeJS.Timeout;
+
     const handleResize = () => {
-      resizeCanvas();
-      // Redistribute nodes for new dimensions
-      for (const n of nodes) {
-        if (n.x > width) n.x = Math.random() * width;
-        if (n.y > height) n.y = Math.random() * height;
+      const newWidth = window.innerWidth;
+      const newHeight = window.innerHeight;
+      
+      // Only resize if dimensions actually changed significantly
+      // This prevents mobile browser UI changes from triggering resize
+      const widthChange = Math.abs(newWidth - width) / width;
+      const heightChange = Math.abs(newHeight - height) / height;
+      
+      // Only resize if change is more than 5% or if it's a significant size change
+      if (widthChange > 0.05 || heightChange > 0.05) {
+        // Debounce resize to prevent multiple rapid calls
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          resizeCanvas();
+          // Redistribute nodes for new dimensions
+          for (const n of nodes) {
+            if (n.x > width) n.x = Math.random() * width;
+            if (n.y > height) n.y = Math.random() * height;
+          }
+          // Clear edge states to avoid weird connections during resize
+          edgeStates.clear();
+        }, 100);
       }
-      // Clear previous edges to avoid weird connections during resize
-      prevEdges.clear();
     };
     
+    /* ────────── MOBILE SCROLL PREVENTION ────────── */
+    const preventScroll = (e: Event) => {
+      e.preventDefault();
+    };
+
+    // Prevent all touch-based scrolling on the canvas
+    canvas.addEventListener('touchstart', preventScroll, { passive: false });
+    canvas.addEventListener('touchmove', preventScroll, { passive: false });
+    canvas.addEventListener('touchend', preventScroll, { passive: false });
+    
+    // Also prevent mouse wheel scrolling over the canvas
+    canvas.addEventListener('wheel', preventScroll, { passive: false });
+
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', handleResize);
+      }
+      canvas.removeEventListener('touchstart', preventScroll);
+      canvas.removeEventListener('touchmove', preventScroll);
+      canvas.removeEventListener('touchend', preventScroll);
+      canvas.removeEventListener('wheel', preventScroll);
+      clearTimeout(resizeTimeout);
+    };
   }, []);
 
-  return <canvas ref={canvasRef} className="fixed inset-0 -z-10" />;
+  return (
+    <canvas 
+      ref={canvasRef} 
+      className="fixed inset-0 -z-10"
+      style={{
+        touchAction: 'none', // Prevents scrolling/zooming on mobile
+        userSelect: 'none',  // Prevents text selection
+        WebkitUserSelect: 'none',
+        WebkitTouchCallout: 'none'
+      }}
+    />
+  );
 }
