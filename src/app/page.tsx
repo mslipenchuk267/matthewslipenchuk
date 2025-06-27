@@ -1,39 +1,93 @@
 export default function Home() {
+  const glassTile = "bg-white bg-opacity-30 shadow-sm backdrop-filter backdrop-blur-xl rounded-md p-6 border border-gray-200";
+  const skillTile = "bg-white bg-opacity-30 shadow-sm backdrop-filter backdrop-blur-xl border-gray-300 border rounded-md px-3 py-1 text-sm"
+  const skillList = "flex flex-wrap gap-2"
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <h1>Matthew Slipenchuk</h1>
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Save the world
-          </li>
-          <li className="tracking-[-.01em]">
-            Retire to farm
-          </li>
-        </ol>
+    <div className="min-h-screen bg-gray-50 font-sans">
+      {/* Hero Section */}
+      <section className="py-20 px-10 text-center">
+        <h1 className="text-5xl font-bold mb-4">Matthew Slipenchuk</h1>
+      </section>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://www.youtube.com/watch?v=0ANLBX2EgmM"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Beach Sunset
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://www.youtube.com/watch?v=g4Wj0MrMnxQ"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Forest Walk
-          </a>
+      {/* Main Section */}
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 my-16 px-6">
+        {/* Left Side - Cards */}
+        <div className="space-y-6">
+          {/* Description Card */}
+          <div className={glassTile}>
+            <h2 className="text-2xl font-semibold mb-3">About Me</h2>
+            <p className="text-gray-700">I'm a Software Engineer with 6 years of expereince in the healthcare and medical device industry. 
+              I have built full-stack solutions across distributed service based architectures. 
+              My work spans from embedded systems to cloud services. I have led both frontend and backend teams, implenting secure authentication systems, high-volume data pipelines, and bespoke visualizations.</p>
+          </div>
+
+          {/* Paper Card */}
+          <div className={glassTile}>
+            <h2 className="text-2xl font-semibold mb-3">Publications</h2>
+            <p className="text-gray-700">"Assessment of Extremely Premature Lambs Supported by the Extrauterine Environment for Neonatal Development (EXTEND)" Nature, Pediatric Journal 2024.</p>
+          </div>
+
+          {/* Patent Card */}
+          <div className={glassTile}>
+            <h2 className="text-2xl font-semibold mb-3">Patents</h2>
+            <p className="text-gray-700">"Method and Device for Measuring Oxygen Saturation"</p>
+            <p className="text-gray-700">International Patent Application No. PCT/US2023/067310</p>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        Matthew Slipenchuk&apos;s Personal Site
-      </footer>
+
+        {/* Right Side - Timeline */}
+        <div className="relative pl-8">
+          <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-gray-300"></div>
+
+          {/* Languages */}
+          <div className="mb-10 relative">
+            <h3 className="font-semibold text-lg mb-2">Languages</h3>
+            <ul className="flex flex-wrap gap-2">
+              {['C++ 11/17', 'Python', 'Golang', 'JavaScript', 'TypeScript', 'R', 'C', 'Matlab', 'Ruby', 'VBS', 'HTML', 'CSS', 'Bash'].map((lang) => (
+                <li key={lang} className={skillTile}>
+                  {lang}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Frameworks */}
+          <div className="mb-10 relative">
+            <h3 className="font-semibold text-lg mb-2">Frameworks</h3>
+            <ul className="flex flex-wrap gap-2">
+              {['Qt', 'Vue', 'FastAPI', 'Next.js', 'React', 'React Native', 'Flask', 'Ruby on Rails'].map((framework) => (
+                <li key={framework} className={skillTile}>
+                  {framework}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Databases */}
+          <div className="mb-10 relative">
+            <h3 className="font-semibold text-lg mb-2">Database Technologies</h3>
+            <ul className="flex flex-wrap gap-2">
+              {['PostgreSQL', 'SQLite', 'Redis', 'DuckDB', 'Spark', 'Databricks'].map((db) => (
+                <li key={db} className={skillTile}>
+                  {db}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* IoT Technologies */}
+          <div className="mb-10 relative">
+            <h3 className="font-semibold text-lg mb-2">IoT</h3>
+            <ul className="flex flex-wrap gap-2">
+              {['MQTT', 'PlatformIO', 'Arduino', 'Raspberry Pi'].map((tech) => (
+                <li key={tech} className={skillTile}>
+                  {tech}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
