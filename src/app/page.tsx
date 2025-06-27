@@ -1,7 +1,8 @@
 export default function Home() {
   const glassTile = "bg-white bg-opacity-30 shadow-sm backdrop-filter backdrop-blur-xl rounded-md p-6 border border-gray-200";
-  const skillTile = "bg-white bg-opacity-30 shadow-sm backdrop-filter backdrop-blur-xl border-gray-300 border rounded-md px-3 py-1 text-sm"
-  const skillList = "flex flex-wrap gap-2"
+  const skillTile = "bg-white bg-opacity-30 shadow-sm backdrop-filter backdrop-blur-xl border-gray-300 border rounded-md px-3 py-1 text-sm w-fit inline-block"
+  const cloudSkillTile = `${skillTile} w-full text-center`;
+
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
       {/* Hero Section */}
@@ -73,6 +74,36 @@ export default function Home() {
                 </li>
               ))}
             </ul>
+          </div>
+
+          {/* Cloud Services */}
+          <div className="mb-10 relative w-fit inline-block">
+            <h3 className="font-semibold text-lg mb-2">Cloud Services</h3>
+            <div className="grid grid-cols-2 w-fit gap-4">
+              {/* AWS */}
+              <div className="bg-yellow-50 border border-yellow-400 shadow-md rounded-md p-4">
+                <h3 className="font-semibold text-lg mb-3 text-yellow-800">AWS</h3>
+                <ul className="flex flex-col gap-2">
+                  {['S3', 'EC2', 'ECS', 'EKS'].map((service) => (
+                    <li key={service} className={cloudSkillTile}>
+                      {service}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Azure */}
+              <div className="bg-blue-50 border border-blue-400 shadow-md rounded-md p-4">
+                <h3 className="font-semibold text-lg mb-3 text-blue-800">Azure</h3>
+                <ul className="flex flex-col gap-2">
+                  {['Data Lake', 'Virtual Machine', 'IoT Hub', 'App Service', 'Container Registry'].map((service) => (
+                    <li key={service} className={cloudSkillTile}>
+                      {service}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
 
           {/* IoT Technologies */}
