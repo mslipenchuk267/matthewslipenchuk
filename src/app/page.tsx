@@ -6,7 +6,7 @@ export default function Home() {
   const cloudSkillTile = `${skillTile} w-full text-center`;
 
   return (
-    <div className="min-h-screen font-sans" style={{ background: 'var(--background)' }}>
+    <div className="min-h-screen font-sans">
       {/* Hero Section */}
       <section className="py-20 pb-5 px-10">
         <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center gap-12">
@@ -25,7 +25,7 @@ export default function Home() {
           {/* Description Card */}
           <div className={glassTile}>
             <h2 className="text-2xl font-semibold mb-3">About Me</h2>
-            <p className="text-gray-700">I&apos;m a Software Engineer with 6 years of expereince in the healthcare and medical device industry. 
+            <p className="text-gray-700">I&apos;m a Software Engineer with 6 years of experience in the healthcare and medical device industry. 
               I have built full-stack solutions across distributed service based architectures. 
               My work spans from embedded systems to cloud services. I have led both frontend and backend teams, implenting secure authentication systems, high-volume data pipelines, and bespoke visualizations.</p>
           </div>
@@ -33,13 +33,13 @@ export default function Home() {
           {/* Paper Card */}
           <div className={glassTile}>
             <h2 className="text-2xl font-semibold mb-3">Publications</h2>
-            <p className="text-gray-700">&quot;Assessment of Extremely Premature Lambs Supported by the Extrauterine Environment for Neonatal Development (EXTEND)&quot; Nature, Pediatric Journal 2024.</p>
+            <a href="https://www.nature.com/articles/s41390-024-03287-0" className="text-blue-700 underline hover:no-underline" target="_blank">&quot;Assessment of Extremely Premature Lambs Supported by the Extrauterine Environment for Neonatal Development (EXTEND)&quot;</a> Nature, Pediatric Research 2024.
           </div>
 
           {/* Patent Card */}
           <div className={glassTile}>
             <h2 className="text-2xl font-semibold mb-3">Patents</h2>
-            <p className="text-gray-700">&quot;Method and Device for Measuring Oxygen Saturation&quot;</p>
+            <a href="https://patentscope.wipo.int/search/en/detail.jsf?docId=WO2023225684&_cid=P20-LTP5V7-75360-1" className="text-blue-700 underline hover:no-underline" target="_blank">&quot;Method and Device for Measuring Oxygen Saturation&quot;</a>
             <p className="text-gray-700">International Patent Application No. PCT/US2023/067310</p>
           </div>
         </div>
