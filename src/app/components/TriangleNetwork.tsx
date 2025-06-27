@@ -246,7 +246,7 @@ export default function TriangleNetwork() {
 
     /* ────────── RESIZE ────────── */
     let resizeTimeout: NodeJS.Timeout;
-
+    
     const handleResize = () => {
       const newWidth = window.innerWidth;
       const newHeight = window.innerHeight;
@@ -274,16 +274,20 @@ export default function TriangleNetwork() {
     };
     
     /* ────────── MOBILE SCROLL PREVENTION ────────── */
-    const preventScroll = (e: Event) => {
+    const preventScroll = (e: TouchEvent | WheelEvent) => {
+      // Don't prevent pull-to-refresh at the top of the page
+      if (e.type === 'touchstart' || e.type === 'touchmove') {
+        const touch = (e as TouchEvent).touches[0];
+        if (touch && window.scrollY === 0 && e.type === 'touchstart') {
+          // Allow pull-to-refresh gesture at top of page
+          return;
+        }
+      }
       e.preventDefault();
     };
 
-    // Prevent all touch-based scrolling on the canvas
-    canvas.addEventListener('touchstart', preventScroll, { passive: false });
+    // Prevent scrolling but allow pull-to-refresh
     canvas.addEventListener('touchmove', preventScroll, { passive: false });
-    canvas.addEventListener('touchend', preventScroll, { passive: false });
-    
-    // Also prevent mouse wheel scrolling over the canvas
     canvas.addEventListener('wheel', preventScroll, { passive: false });
 
     window.addEventListener('resize', handleResize);
@@ -293,9 +297,7 @@ export default function TriangleNetwork() {
       if (window.visualViewport) {
         window.visualViewport.removeEventListener('resize', handleResize);
       }
-      canvas.removeEventListener('touchstart', preventScroll);
       canvas.removeEventListener('touchmove', preventScroll);
-      canvas.removeEventListener('touchend', preventScroll);
       canvas.removeEventListener('wheel', preventScroll);
       clearTimeout(resizeTimeout);
     };
