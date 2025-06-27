@@ -1,12 +1,14 @@
 import Image from "next/image";
+import TriangleNetwork from "./components/TriangleNetwork";
 
 export default function Home() {
-  const glassTile = "bg-white bg-opacity-30 shadow-sm backdrop-filter backdrop-blur-xl rounded-md p-6 border border-gray-200";
-  const skillTile = "bg-white bg-opacity-30 shadow-sm backdrop-filter backdrop-blur-xl border-gray-300 border rounded-md px-3 py-1 text-sm w-fit inline-block"
+  const glassTile = "bg-opacity-90 shadow-sm backdrop-filter backdrop-blur-[2px] rounded-md p-6 border border-gray-200";
+  const skillTile = "bg-opacity-90 shadow-sm backdrop-filter backdrop-blur-[2px] border-gray-300 border rounded-md px-3 py-1 text-sm w-fit inline-block"
   const cloudSkillTile = `${skillTile} w-full text-center`;
 
   return (
     <div className="min-h-screen font-sans">
+      <TriangleNetwork />
       {/* Hero Section */}
       <section className="py-20 pb-5 px-10">
         <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center gap-12">
