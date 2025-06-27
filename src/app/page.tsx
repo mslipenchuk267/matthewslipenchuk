@@ -1,13 +1,21 @@
+import Image from "next/image";
+
 export default function Home() {
   const glassTile = "bg-white bg-opacity-30 shadow-sm backdrop-filter backdrop-blur-xl rounded-md p-6 border border-gray-200";
   const skillTile = "bg-white bg-opacity-30 shadow-sm backdrop-filter backdrop-blur-xl border-gray-300 border rounded-md px-3 py-1 text-sm w-fit inline-block"
   const cloudSkillTile = `${skillTile} w-full text-center`;
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans">
+    <div className="min-h-screen font-sans" style={{ background: 'var(--background)' }}>
       {/* Hero Section */}
-      <section className="py-20 px-10 text-center">
-        <h1 className="text-5xl font-bold mb-4">Matthew Slipenchuk</h1>
+      <section className="py-20 pb-5 px-10">
+        <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center gap-12">
+          <Image src="/profile.jpeg" alt="Profile" width={288} height={288} className="w-72 h-72 rounded-full border border-gray-300 shadow-lg" />
+          <div className="text-left">
+            <h1 className="text-5xl font-bold mb-2 text-gray-900">Matthew Slipenchuk</h1>
+            <p className="text-xl text-gray-700">Software Generalist.</p>
+          </div>
+        </div>
       </section>
 
       {/* Main Section */}
@@ -17,7 +25,7 @@ export default function Home() {
           {/* Description Card */}
           <div className={glassTile}>
             <h2 className="text-2xl font-semibold mb-3">About Me</h2>
-            <p className="text-gray-700">I'm a Software Engineer with 6 years of expereince in the healthcare and medical device industry. 
+            <p className="text-gray-700">I&apos;m a Software Engineer with 6 years of expereince in the healthcare and medical device industry. 
               I have built full-stack solutions across distributed service based architectures. 
               My work spans from embedded systems to cloud services. I have led both frontend and backend teams, implenting secure authentication systems, high-volume data pipelines, and bespoke visualizations.</p>
           </div>
@@ -25,13 +33,13 @@ export default function Home() {
           {/* Paper Card */}
           <div className={glassTile}>
             <h2 className="text-2xl font-semibold mb-3">Publications</h2>
-            <p className="text-gray-700">"Assessment of Extremely Premature Lambs Supported by the Extrauterine Environment for Neonatal Development (EXTEND)" Nature, Pediatric Journal 2024.</p>
+            <p className="text-gray-700">&quot;Assessment of Extremely Premature Lambs Supported by the Extrauterine Environment for Neonatal Development (EXTEND)&quot; Nature, Pediatric Journal 2024.</p>
           </div>
 
           {/* Patent Card */}
           <div className={glassTile}>
             <h2 className="text-2xl font-semibold mb-3">Patents</h2>
-            <p className="text-gray-700">"Method and Device for Measuring Oxygen Saturation"</p>
+            <p className="text-gray-700">&quot;Method and Device for Measuring Oxygen Saturation&quot;</p>
             <p className="text-gray-700">International Patent Application No. PCT/US2023/067310</p>
           </div>
         </div>
