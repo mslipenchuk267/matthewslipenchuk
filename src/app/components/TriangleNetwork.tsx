@@ -12,24 +12,30 @@ export default function TriangleNetwork() {
     /* detect coarse pointers (most phones / tablets) */
     const isMobile = window.matchMedia('(pointer: coarse)').matches;
 
-    /* retina-proof sizing */
-    const dpr = window.devicePixelRatio || 1;
+    /* retina-proof sizing - SIMPLIFIED 2023 METHOD */
+    let width = 0, height = 0;
+    
     function resizeCanvas() {
       const cssW = window.innerWidth;
       const cssH = window.innerHeight;
+      const ratio = window.devicePixelRatio || 1;
 
-      ctx.setTransform(1, 0, 0, 1, 0, 0);  
-
-      canvas.style.width  = cssW + 'px';
+      // 1. Set actual canvas size multiplied by device pixel ratio
+      canvas.width = cssW * ratio;
+      canvas.height = cssH * ratio;
+      
+      // 2. Force display at logical size with CSS
+      canvas.style.width = cssW + 'px';
       canvas.style.height = cssH + 'px';
-      canvas.width  = cssW * dpr;
-      canvas.height = cssH * dpr;
-      ctx.scale(dpr, dpr);             // draw in CSS pixel units
-      width  = cssW;
+      
+      // 3. Scale context so we can draw at logical size
+      ctx.scale(ratio, ratio);
+      
+      // Store logical dimensions for calculations
+      width = cssW;
       height = cssH;
     }
 
-    let width = 0, height = 0;
     resizeCanvas();
 
     /* ────────── CONFIG ────────── */
@@ -57,9 +63,13 @@ export default function TriangleNetwork() {
     const breakDistSq = BREAK_DIST * BREAK_DIST;
     const key = (i: number, j: number) => (i < j ? `${i}-${j}` : `${j}-${i}`);
 
-    const torusDiff = (d: number, size: number) =>
-      d >  size / 2 ? d - size :
-      d < -size / 2 ? d + size : d;
+    // FIXED torus distance calculation
+    const torusDiff = (d: number, size: number) => {
+      if (Math.abs(d) > size / 2) {
+        return d > 0 ? d - size : d + size;
+      }
+      return d;
+    };
 
     /* ────────── MAIN LOOP ────────── */
     let last = performance.now();
@@ -84,8 +94,13 @@ export default function TriangleNetwork() {
           n.vy = (n.vy / s) * SPEED_CAP;
         }
 
-        n.x = (n.x + n.vx * dt + width)  % width;
-        n.y = (n.y + n.vy * dt + height) % height;
+        // FIXED torus wrapping
+        n.x += n.vx * dt;
+        n.y += n.vy * dt;
+        
+        // Proper modulo that handles negatives
+        n.x = ((n.x % width) + width) % width;
+        n.y = ((n.y % height) + height) % height;
       }
 
       /* 2. compute edges */
@@ -155,8 +170,17 @@ export default function TriangleNetwork() {
     requestAnimationFrame(animate);
 
     /* ────────── RESIZE ────────── */
-    window.addEventListener('resize', resizeCanvas);
-    return () => window.removeEventListener('resize', resizeCanvas);
+    const handleResize = () => {
+      resizeCanvas();
+      // Redistribute nodes for new dimensions
+      for (const n of nodes) {
+        if (n.x > width) n.x = Math.random() * width;
+        if (n.y > height) n.y = Math.random() * height;
+      }
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   return <canvas ref={canvasRef} className="fixed inset-0 -z-10" />;
