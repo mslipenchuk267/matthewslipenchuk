@@ -119,7 +119,7 @@ export default function Home() {
             <h3 className="font-semibold text-lg mb-2">Cloud Services</h3>
             <div className="grid grid-cols-2 w-fit gap-4">
               {/* AWS */}
-              <div className="bg-yellow-50 border border-yellow-400 shadow-md rounded-md p-4">
+              <div className="backdrop-filter backdrop-blur-sm bg-opacity-90 border border-yellow-400 shadow-md rounded-md p-4">
                 <h3 className="font-semibold text-lg mb-3 text-yellow-800">AWS</h3>
                 <ul className="flex flex-col gap-2">
                   {['S3', 'EC2', 'ECS', 'EKS'].map((service) => (
@@ -131,7 +131,7 @@ export default function Home() {
               </div>
 
               {/* Azure */}
-              <div className="bg-blue-50 border border-blue-400 shadow-md rounded-md p-4">
+              <div className="backdrop-filter backdrop-blur-sm bg-opacity-90  border border-blue-400 shadow-md rounded-md p-4">
                 <h3 className="font-semibold text-lg mb-3 text-blue-800">Azure</h3>
                 <ul className="flex flex-col gap-2">
                   {['Data Lake', 'Virtual Machine', 'IoT Hub', 'App Service', 'Container Registry'].map((service) => (

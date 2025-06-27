@@ -12,7 +12,7 @@ export default function TriangleNetwork() {
     /* detect coarse pointers (most phones / tablets) */
     const isMobile = window.matchMedia('(pointer: coarse)').matches;
 
-    /* retina-proof sizing - SIMPLIFIED 2023 METHOD */
+    /* retina-proof sizing - MOBILE-FOCUSED METHOD */
     let width = 0, height = 0;
     
     function resizeCanvas() {
@@ -20,20 +20,24 @@ export default function TriangleNetwork() {
       const cssH = window.innerHeight;
       const ratio = window.devicePixelRatio || 1;
 
-      // 1. Set actual canvas size multiplied by device pixel ratio
+      // Store logical dimensions first
+      width = cssW;
+      height = cssH;
+
+      // Setting canvas.width/height automatically clears the canvas and resets context
       canvas.width = cssW * ratio;
       canvas.height = cssH * ratio;
       
-      // 2. Force display at logical size with CSS
+      // Set CSS display size
       canvas.style.width = cssW + 'px';
       canvas.style.height = cssH + 'px';
       
-      // 3. Scale context so we can draw at logical size
+      // Scale context for high-DPI rendering
+      // This must be done after setting canvas.width/height since that resets the context
       ctx.scale(ratio, ratio);
       
-      // Store logical dimensions for calculations
-      width = cssW;
-      height = cssH;
+      // Ensure crisp lines
+      ctx.imageSmoothingEnabled = false;
     }
 
     resizeCanvas();
@@ -177,6 +181,8 @@ export default function TriangleNetwork() {
         if (n.x > width) n.x = Math.random() * width;
         if (n.y > height) n.y = Math.random() * height;
       }
+      // Clear previous edges to avoid weird connections during resize
+      prevEdges.clear();
     };
     
     window.addEventListener('resize', handleResize);
