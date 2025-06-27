@@ -10,10 +10,31 @@ export default function Home() {
       {/* Hero Section */}
       <section className="py-20 pb-5 px-10">
         <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center gap-12">
-          <Image src="/profile.jpeg" alt="Profile" width={288} height={288} className="w-72 h-72 rounded-full border border-gray-300 shadow-lg" />
+          <Image src="/profile.jpeg" alt="Profile" width={288} height={288} className="rounded-full border border-gray-300 shadow-lg" />
           <div className="text-left">
             <h1 className="text-5xl font-bold mb-2 text-gray-900">Matthew Slipenchuk</h1>
             <p className="text-xl text-gray-700">Software Generalist.</p>
+            <div className="text-left flex gap-4 mt-8">
+              <a
+                href="mailto:mslipenchuk267@gmail.com"
+                className="inline-block border border-gray-300 hover:bg-gray-100 hover:text-gray-900 font-medium py-2 px-4 rounded-md shadow transition"
+              >
+                Email
+              </a>
+              <a
+                href="https://www.linkedin.com/in/matthew-slipenchuk/" target="_blank"
+                className="inline-block border border-gray-300 hover:bg-gray-100 hover:text-gray-900 font-medium py-2 px-4 rounded-md shadow transition"
+              >
+                LinkedIn
+              </a>
+              <a
+                href="https://github.com/mslipenchuk267" target="_blank"
+                className="inline-block border border-gray-300 hover:bg-gray-100 hover:text-gray-900 font-medium py-2 px-4 rounded-md shadow transition"
+              >
+                GitHub
+              </a>
+            </div>
+
           </div>
         </div>
       </section>
@@ -22,25 +43,32 @@ export default function Home() {
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 my-16 px-6">
         {/* Left Side - Cards */}
         <div className="space-y-6">
-          {/* Description Card */}
+          {/* About Card */}
           <div className={glassTile}>
             <h2 className="text-2xl font-semibold mb-3">About Me</h2>
             <p className="text-gray-700">I&apos;m a Software Engineer with 6 years of experience in the healthcare and medical device industry. 
               I have built full-stack solutions across distributed service based architectures. 
-              My work spans from embedded systems to cloud services. I have led both frontend and backend teams, implenting secure authentication systems, high-volume data pipelines, and bespoke visualizations.</p>
+              My work spans from embedded systems to cloud services. I have led frontend and backend teams, implenting secure authentication systems, high-volume data pipelines, and bespoke visualizations.
+            </p>
+            <br />
+            <p className="text-gray-700">
+              I am currently based in Philadelphia, Pennsylvania.
+              Outside of my professional life, I enjoy writing poetry, playing music with friends, plein-air painting, and watching movies.
+            </p>
           </div>
 
           {/* Paper Card */}
           <div className={glassTile}>
             <h2 className="text-2xl font-semibold mb-3">Publications</h2>
-            <a href="https://www.nature.com/articles/s41390-024-03287-0" className="text-blue-700 underline hover:no-underline" target="_blank">&quot;Assessment of Extremely Premature Lambs Supported by the Extrauterine Environment for Neonatal Development (EXTEND)&quot;</a> Nature, Pediatric Research 2024.
+            <a href="https://www.nature.com/articles/s41390-024-03287-0" className="text-blue-700 underline hover:no-underline" target="_blank">&quot;Assessment of Extremely Premature Lambs Supported by the Extrauterine Environment for Neonatal Development (EXTEND)&quot;</a>
+            <p>Nature, Pediatric Research 2024.</p>
           </div>
 
           {/* Patent Card */}
           <div className={glassTile}>
             <h2 className="text-2xl font-semibold mb-3">Patents</h2>
             <a href="https://patentscope.wipo.int/search/en/detail.jsf?docId=WO2023225684&_cid=P20-LTP5V7-75360-1" className="text-blue-700 underline hover:no-underline" target="_blank">&quot;Method and Device for Measuring Oxygen Saturation&quot;</a>
-            <p className="text-gray-700">International Patent Application No. PCT/US2023/067310</p>
+            <p >International Patent Application No. PCT/US2023/067310</p>
           </div>
         </div>
 
