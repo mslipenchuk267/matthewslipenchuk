@@ -5,28 +5,44 @@ export default function TriangleNetwork() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    /* ─────────────────────────────  BASICS  ─────────────────────────────── */
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    /* ────────── BASIC SETUP ────────── */
+    const canvas = canvasRef.current as HTMLCanvasElement;
     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
-    let width  = (canvas.width  = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
+    /* detect coarse pointers (most phones / tablets) */
+    const isMobile = window.matchMedia('(pointer: coarse)').matches;
 
-    /* ─────────────────────────────  CONFIG  ─────────────────────────────── */
-    const NODE_COUNT = 75;
+    /* retina-proof sizing */
+    const dpr = window.devicePixelRatio || 1;
+    function resizeCanvas() {
+      const cssW = window.innerWidth;
+      const cssH = window.innerHeight;
 
-    // line behaviour
-    const LINK_DIST   = 140;   // connect when closer than this
-    const BREAK_DIST  = 180;   // drop the line only after exceeding this
-    const DEGREE_CAP  = 3;     // max edges per node
+      ctx.setTransform(1, 0, 0, 1, 0, 0);  
 
-    // motion (Brownian-ish)
-    const ACCEL     = 190;      // px/s² random kick
-    const FRICTION  = 1;   // 1 = no drag, lower = slows faster
-    const SPEED_CAP = 480;     // px/s max
+      canvas.style.width  = cssW + 'px';
+      canvas.style.height = cssH + 'px';
+      canvas.width  = cssW * dpr;
+      canvas.height = cssH * dpr;
+      ctx.scale(dpr, dpr);             // draw in CSS pixel units
+      width  = cssW;
+      height = cssH;
+    }
 
-    /* ─────────────────────────────  NODES  ──────────────────────────────── */
+    let width = 0, height = 0;
+    resizeCanvas();
+
+    /* ────────── CONFIG ────────── */
+    const NODE_COUNT = isMobile ? 30 : 80;   // half as many on mobile
+    const LINK_DIST  = 140;
+    const BREAK_DIST = 180;
+    const DEGREE_CAP = 3;
+
+    const ACCEL     = 150;                    // lower kick feels smoother ★ changed
+    const FRICTION  = 0.98;                   // < 1 = gradual slowing   ★ changed
+    const SPEED_CAP = 220;                    // less frantic top speed  ★ changed
+
+    /* ────────── NODES ────────── */
     interface Node { x: number; y: number; vx: number; vy: number }
     const nodes: Node[] = Array.from({ length: NODE_COUNT }, () => ({
       x: Math.random() * width,
@@ -35,18 +51,18 @@ export default function TriangleNetwork() {
       vy: 0,
     }));
 
-    /* ─────────────────────────────  EDGE STATE  ─────────────────────────── */
-    // We remember edges from the previous frame so we can keep them
-    // as long as they stay within BREAK_DIST.
-    let prevEdges = new Set<string>();      // keys: "i-j" with i<j
-
+    /* ────────── EDGE STATE ────────── */
+    let prevEdges = new Set<string>();
     const linkDistSq  = LINK_DIST  * LINK_DIST;
     const breakDistSq = BREAK_DIST * BREAK_DIST;
+    const key = (i: number, j: number) => (i < j ? `${i}-${j}` : `${j}-${i}`);
 
-    /* ─────────────────────────────  LOOP  ───────────────────────────────── */
+    const torusDiff = (d: number, size: number) =>
+      d >  size / 2 ? d - size :
+      d < -size / 2 ? d + size : d;
+
+    /* ────────── MAIN LOOP ────────── */
     let last = performance.now();
-
-    function key(i: number, j: number) { return i < j ? `${i}-${j}` : `${j}-${i}`; }
 
     function animate(now: number) {
       const dt = (now - last) / 1000;
@@ -54,7 +70,7 @@ export default function TriangleNetwork() {
 
       ctx.clearRect(0, 0, width, height);
 
-      /* -------- 1. move nodes -------- */
+      /* 1. move nodes */
       for (const n of nodes) {
         n.vx += (Math.random() - 0.5) * ACCEL * dt;
         n.vy += (Math.random() - 0.5) * ACCEL * dt;
@@ -68,68 +84,69 @@ export default function TriangleNetwork() {
           n.vy = (n.vy / s) * SPEED_CAP;
         }
 
-        n.x += n.vx * dt;
-        n.y += n.vy * dt;
-
-        if (n.x < 0) n.x += width;  if (n.x > width)  n.x -= width;
-        if (n.y < 0) n.y += height; if (n.y > height) n.y -= height;
+        n.x = (n.x + n.vx * dt + width)  % width;
+        n.y = (n.y + n.vy * dt + height) % height;
       }
 
-      /* -------- 2. compute edges with “stickiness” -------- */
+      /* 2. compute edges */
       const degree = new Array(NODE_COUNT).fill(0);
-      const edges: { a: Node; b: Node; d: number }[] = [];
+      const edges: { i: number; dx: number; dy: number; d: number }[] = [];
       const nextEdges = new Set<string>();
 
-      // Pass A – keep previous edges if still within BREAK_DIST
+      // keep previous edges if still within BREAK_DIST
       for (const id of prevEdges) {
         const [iStr, jStr] = id.split('-');
         const i = +iStr, j = +jStr;
         const a = nodes[i], b = nodes[j];
-        const dx = a.x - b.x, dy = a.y - b.y;
+        const dx = torusDiff(a.x - b.x, width);
+        const dy = torusDiff(a.y - b.y, height);
         const d2 = dx*dx + dy*dy;
+
         if (d2 <= breakDistSq && degree[i] < DEGREE_CAP && degree[j] < DEGREE_CAP) {
           const d = Math.sqrt(d2);
           degree[i]++; degree[j]++;
-          edges.push({ a, b, d });
+          edges.push({ i, dx, dy, d });
           nextEdges.add(id);
         }
       }
 
-      // Pass B – add new edges (shortest first) until degree cap reached
-      const candidates: { i: number; j: number; d: number }[] = [];
+      // add new edges
+      const cand: { i: number; j: number; dx: number; dy: number; d: number }[] = [];
       for (let i = 0; i < NODE_COUNT - 1; i++) {
         const a = nodes[i];
         for (let j = i + 1; j < NODE_COUNT; j++) {
-          const b = nodes[j];
           const id = key(i, j);
-          if (nextEdges.has(id)) continue;               // already kept
-          const dx = a.x - b.x, dy = a.y - b.y;
+          if (nextEdges.has(id)) continue;
+          const b = nodes[j];
+          const dx = torusDiff(a.x - b.x, width);
+          const dy = torusDiff(a.y - b.y, height);
           const d2 = dx*dx + dy*dy;
-          if (d2 <= linkDistSq) candidates.push({ i, j, d: Math.sqrt(d2) });
+          if (d2 <= linkDistSq) cand.push({ i, j, dx, dy, d: Math.sqrt(d2) });
         }
       }
-      candidates.sort((p, q) => p.d - q.d);             // shortest first
-      for (const { i, j, d } of candidates) {
+      cand.sort((p, q) => p.d - q.d);
+      for (const { i, j, dx, dy, d } of cand) {
         if (degree[i] < DEGREE_CAP && degree[j] < DEGREE_CAP) {
           degree[i]++; degree[j]++;
-          edges.push({ a: nodes[i], b: nodes[j], d });
+          edges.push({ i, dx, dy, d });
           nextEdges.add(key(i, j));
         }
       }
 
-      prevEdges = nextEdges;   // remember for next frame
+      prevEdges = nextEdges;
 
-      /* -------- 3. draw -------- */
+      /* 3. draw */
       ctx.lineWidth = 1;
-      for (const { a, b, d } of edges) {
+      for (const { i, dx, dy, d } of edges) {
+        const a = nodes[i];
         ctx.strokeStyle = `rgba(139,69,19,${1 - d / LINK_DIST})`;
         ctx.beginPath();
         ctx.moveTo(a.x, a.y);
-        ctx.lineTo(b.x, b.y);
+        ctx.lineTo(a.x - dx, a.y - dy);
         ctx.stroke();
       }
 
-      // optional: tiny dots so you can see the nodes
+      /* 4. draw nodes */
       ctx.fillStyle = '#8B4513';
       for (const n of nodes) ctx.fillRect(n.x - 1, n.y - 1, 2, 2);
 
@@ -137,13 +154,9 @@ export default function TriangleNetwork() {
     }
     requestAnimationFrame(animate);
 
-    /* -------- resize -------- */
-    const onResize = () => {
-      width  = canvas.width  = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    };
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
+    /* ────────── RESIZE ────────── */
+    window.addEventListener('resize', resizeCanvas);
+    return () => window.removeEventListener('resize', resizeCanvas);
   }, []);
 
   return <canvas ref={canvasRef} className="fixed inset-0 -z-10" />;

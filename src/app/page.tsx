@@ -2,8 +2,8 @@ import Image from "next/image";
 import TriangleNetwork from "./components/TriangleNetwork";
 
 export default function Home() {
-  const glassTile = "bg-opacity-90 shadow-sm backdrop-filter backdrop-blur-[2px] rounded-md p-6 border border-gray-200";
-  const skillTile = "bg-opacity-90 shadow-sm backdrop-filter backdrop-blur-[2px] border-gray-300 border rounded-md px-3 py-1 text-sm w-fit inline-block"
+  const glassTile = "bg-opacity-90 shadow-sm backdrop-filter backdrop-blur-[3px] rounded-md p-6 border border-gray-200";
+  const skillTile = "bg-opacity-90 shadow-sm backdrop-filter backdrop-blur-[3px] border-gray-300 border rounded-md px-3 py-1 text-sm w-fit inline-block"
   const cloudSkillTile = `${skillTile} w-full text-center`;
 
   return (
@@ -19,19 +19,19 @@ export default function Home() {
             <div className="text-left flex gap-4 mt-8">
               <a
                 href="mailto:mslipenchuk267@gmail.com"
-                className="inline-block border border-gray-300 hover:bg-gray-100 hover:text-gray-900 font-medium py-2 px-4 rounded-md shadow transition"
+                className="inline-block backdrop-filter backdrop-blur-[3px] border border-gray-300 hover:bg-gray-100 hover:text-gray-900 font-medium py-2 px-4 rounded-md shadow transition"
               >
                 Email
               </a>
               <a
                 href="https://www.linkedin.com/in/matthew-slipenchuk/" target="_blank"
-                className="inline-block border border-gray-300 hover:bg-gray-100 hover:text-gray-900 font-medium py-2 px-4 rounded-md shadow transition"
+                className="inline-block backdrop-filter backdrop-blur-[3px] border border-gray-300 hover:bg-gray-100 hover:text-gray-900 font-medium py-2 px-4 rounded-md shadow transition"
               >
                 LinkedIn
               </a>
               <a
                 href="https://github.com/mslipenchuk267" target="_blank"
-                className="inline-block border border-gray-300 hover:bg-gray-100 hover:text-gray-900 font-medium py-2 px-4 rounded-md shadow transition"
+                className="inline-block backdrop-filter backdrop-blur-[3px] border border-gray-300 hover:bg-gray-100 hover:text-gray-900 font-medium py-2 px-4 rounded-md shadow transition"
               >
                 GitHub
               </a>
