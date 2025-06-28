@@ -104,12 +104,131 @@ export default function TriangleNetwork() {
       return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
     };
 
-    // FIXED torus distance calculation
+    // Torus distance and position calculation
     const torusDiff = (d: number, size: number) => {
       if (Math.abs(d) > size / 2) {
         return d > 0 ? d - size : d + size;
       }
       return d;
+    };
+
+    // Draw a line that wraps around screen edges
+    const drawWrappedLine = (x1: number, y1: number, x2: number, y2: number, strokeStyle: string) => {
+      ctx.strokeStyle = strokeStyle;
+      
+      // Check if line needs to wrap horizontally
+      const needsHorizontalWrap = Math.abs(x2 - x1) > width / 2;
+      // Check if line needs to wrap vertically  
+      const needsVerticalWrap = Math.abs(y2 - y1) > height / 2;
+      
+      if (!needsHorizontalWrap && !needsVerticalWrap) {
+        // No wrapping needed - draw normal line
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+        return;
+      }
+      
+      // Calculate actual wrapped positions
+      let actualX2 = x2;
+      let actualY2 = y2;
+      
+      if (needsHorizontalWrap) {
+        if (x2 > x1) {
+          actualX2 = x2 - width;
+        } else {
+          actualX2 = x2 + width;
+        }
+      }
+      
+      if (needsVerticalWrap) {
+        if (y2 > y1) {
+          actualY2 = y2 - height;
+        } else {
+          actualY2 = y2 + height;
+        }
+      }
+      
+      // Draw the wrapped line segments
+      if (needsHorizontalWrap && !needsVerticalWrap) {
+        // Horizontal wrap only
+        if (actualX2 < x1) {
+          // Line goes from right to left across left edge
+          const t = x1 / (x1 - actualX2); // intersection parameter
+          const intersectY = y1 + t * (actualY2 - y1);
+          
+          // Draw from start to left edge
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(0, intersectY);
+          ctx.stroke();
+          
+          // Draw from right edge to end
+          ctx.beginPath();
+          ctx.moveTo(width, intersectY);
+          ctx.lineTo(x2, y2);
+          ctx.stroke();
+        } else {
+          // Line goes from left to right across right edge
+          const t = (width - x1) / (actualX2 - x1);
+          const intersectY = y1 + t * (actualY2 - y1);
+          
+          // Draw from start to right edge
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(width, intersectY);
+          ctx.stroke();
+          
+          // Draw from left edge to end
+          ctx.beginPath();
+          ctx.moveTo(0, intersectY);
+          ctx.lineTo(x2, y2);
+          ctx.stroke();
+        }
+      } else if (needsVerticalWrap && !needsHorizontalWrap) {
+        // Vertical wrap only
+        if (actualY2 < y1) {
+          // Line goes from bottom to top across top edge
+          const t = y1 / (y1 - actualY2);
+          const intersectX = x1 + t * (actualX2 - x1);
+          
+          // Draw from start to top edge
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(intersectX, 0);
+          ctx.stroke();
+          
+          // Draw from bottom edge to end
+          ctx.beginPath();
+          ctx.moveTo(intersectX, height);
+          ctx.lineTo(x2, y2);
+          ctx.stroke();
+        } else {
+          // Line goes from top to bottom across bottom edge
+          const t = (height - y1) / (actualY2 - y1);
+          const intersectX = x1 + t * (actualX2 - x1);
+          
+          // Draw from start to bottom edge
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(intersectX, height);
+          ctx.stroke();
+          
+          // Draw from top edge to end
+          ctx.beginPath();
+          ctx.moveTo(intersectX, 0);
+          ctx.lineTo(x2, y2);
+          ctx.stroke();
+        }
+      } else {
+        // Both horizontal and vertical wrap - draw corner-to-corner
+        // This is complex, so for now just draw the direct wrapped line
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(actualX2, actualY2);
+        ctx.stroke();
+      }
     };
 
     /* ────────── MAIN LOOP ────────── */
@@ -163,9 +282,9 @@ export default function TriangleNetwork() {
         const a = nodes[edge.i], b = nodes[edge.j];
         const dx = torusDiff(a.x - b.x, width);
         const dy = torusDiff(a.y - b.y, height);
-        const d2 = dx*dx + dy*dy;
+        const distance = Math.sqrt(dx*dx + dy*dy);
 
-        if (d2 <= breakDistSq && degree[edge.i] < DEGREE_CAP && degree[edge.j] < DEGREE_CAP) {
+        if (distance * distance <= breakDistSq && degree[edge.i] < DEGREE_CAP && degree[edge.j] < DEGREE_CAP) {
           degree[edge.i]++;
           degree[edge.j]++;
           currentActiveEdges.add(edgeId);
@@ -189,10 +308,10 @@ export default function TriangleNetwork() {
           const b = nodes[j];
           const dx = torusDiff(a.x - b.x, width);
           const dy = torusDiff(a.y - b.y, height);
-          const d2 = dx*dx + dy*dy;
+          const distance = Math.sqrt(dx*dx + dy*dy);
           
-          if (d2 <= linkDistSq) {
-            candidates.push({ id: edgeId, i, j, d: Math.sqrt(d2) });
+          if (distance * distance <= linkDistSq) {
+            candidates.push({ id: edgeId, i, j, d: distance });
           }
         }
       }
@@ -254,26 +373,25 @@ export default function TriangleNetwork() {
         const a = nodes[edge.i], b = nodes[edge.j];
         const dx = torusDiff(a.x - b.x, width);
         const dy = torusDiff(a.y - b.y, height);
-        const d = Math.sqrt(dx*dx + dy*dy);
+        const distance = Math.sqrt(dx*dx + dy*dy);
 
         // Combine distance-based alpha with persistent opacity
-        const distanceAlpha = Math.max(0, 1 - d / LINK_DIST);
+        const distanceAlpha = Math.max(0, 1 - distance / LINK_DIST);
         const finalAlpha = distanceAlpha * edge.opacity;
 
         if (finalAlpha > 0.01) {
           // Parse the HSL color and add alpha
           const hslMatch = edge.color.match(/hsl\((\d+), (\d+)%, (\d+)%\)/);
+          let strokeStyle;
           if (hslMatch) {
             const [, h, s, l] = hslMatch;
-            ctx.strokeStyle = `hsla(${h}, ${s}%, ${l}%, ${finalAlpha})`;
+            strokeStyle = `hsla(${h}, ${s}%, ${l}%, ${finalAlpha})`;
           } else {
-            ctx.strokeStyle = `rgba(139,69,19,${finalAlpha})`;
+            strokeStyle = `rgba(139,69,19,${finalAlpha})`;
           }
           
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(a.x - dx, a.y - dy);
-          ctx.stroke();
+          // Use the wrapped line drawing function
+          drawWrappedLine(a.x, a.y, b.x, b.y, strokeStyle);
         }
       }
 
