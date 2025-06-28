@@ -61,13 +61,13 @@ export default function TriangleNetwork() {
     const BREAK_DIST = 180;
     const DEGREE_CAP = 3;
 
-    const ACCEL     = 150;                    // lower kick feels smoother ★ changed
-    const FRICTION  = 0.98;                   // < 1 = gradual slowing   ★ changed
-    const SPEED_CAP = 220;                    // less frantic top speed  ★ changed
+    const ACCEL     = 150;
+    const FRICTION  = 0.98;
+    const SPEED_CAP = 220;
 
     // Transition settings
-    const FADE_IN_SPEED = 3.0;   // How fast lines fade in
-    const FADE_OUT_SPEED = 2.0;  // How fast lines fade out
+    const FADE_IN_SPEED = 3.0;
+    const FADE_OUT_SPEED = 2.0;
 
     /* ────────── NODES ────────── */
     interface Node { x: number; y: number; vx: number; vy: number }
@@ -78,16 +78,31 @@ export default function TriangleNetwork() {
       vy: 0,
     }));
 
-    /* ────────── EDGE STATE WITH OPACITY ────────── */
-    interface EdgeState {
+    /* ────────── PERSISTENT EDGE STATE ────────── */
+    interface PersistentEdge {
+      i: number;
+      j: number;
       opacity: number;
-      active: boolean;
+      targetOpacity: number;
+      color: string;
+      lastActiveTime: number;
+      isActive: boolean;
     }
     
-    const edgeStates = new Map<string, EdgeState>();
+    const persistentEdges = new Map<string, PersistentEdge>();
     const linkDistSq  = LINK_DIST  * LINK_DIST;
     const breakDistSq = BREAK_DIST * BREAK_DIST;
     const key = (i: number, j: number) => (i < j ? `${i}-${j}` : `${j}-${i}`);
+
+    // Generate a consistent color for each edge based on node indices
+    const getEdgeColor = (i: number, j: number): string => {
+      // Use a simple hash to get consistent colors
+      const hash = (i * 73 + j * 37) % 360;
+      const hue = hash;
+      const saturation = 30 + (hash % 40); // 30-70%
+      const lightness = 40 + (hash % 20);  // 40-60%
+      return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+    };
 
     // FIXED torus distance calculation
     const torusDiff = (d: number, size: number) => {
@@ -100,10 +115,22 @@ export default function TriangleNetwork() {
     /* ────────── MAIN LOOP ────────── */
     let last = performance.now();
 
+    function ensureContextState() {
+        const ratio = window.devicePixelRatio || 1;
+        const currentTransform = ctx.getTransform();
+        
+        if (Math.abs(currentTransform.a - ratio) > 0.01 || Math.abs(currentTransform.d - ratio) > 0.01) {
+          ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+        }
+        
+        ctx.imageSmoothingEnabled = false;
+    }
+
     function animate(now: number) {
       const dt = (now - last) / 1000;
       last = now;
 
+      ensureContextState();
       ctx.clearRect(0, 0, width, height);
 
       /* 1. move nodes */
@@ -120,44 +147,44 @@ export default function TriangleNetwork() {
           n.vy = (n.vy / s) * SPEED_CAP;
         }
 
-        // FIXED torus wrapping
         n.x += n.vx * dt;
         n.y += n.vy * dt;
         
-        // Proper modulo that handles negatives
         n.x = ((n.x % width) + width) % width;
         n.y = ((n.y % height) + height) % height;
       }
 
-      /* 2. compute current valid edges */
+      /* 2. Update persistent edge states */
+      const currentActiveEdges = new Set<string>();
       const degree = new Array(NODE_COUNT).fill(0);
-      const validEdges = new Set<string>();
 
-      // Check existing edges first (for degree calculation)
-      for (const [edgeId, state] of edgeStates) {
-        if (state.opacity <= 0) continue;
-        
-        const [iStr, jStr] = edgeId.split('-');
-        const i = +iStr, j = +jStr;
-        const a = nodes[i], b = nodes[j];
+      // First pass: check existing edges and mark active ones
+      for (const [edgeId, edge] of persistentEdges) {
+        const a = nodes[edge.i], b = nodes[edge.j];
         const dx = torusDiff(a.x - b.x, width);
         const dy = torusDiff(a.y - b.y, height);
         const d2 = dx*dx + dy*dy;
 
-        if (d2 <= breakDistSq && degree[i] < DEGREE_CAP && degree[j] < DEGREE_CAP) {
-          degree[i]++; 
-          degree[j]++;
-          validEdges.add(edgeId);
+        if (d2 <= breakDistSq && degree[edge.i] < DEGREE_CAP && degree[edge.j] < DEGREE_CAP) {
+          degree[edge.i]++;
+          degree[edge.j]++;
+          currentActiveEdges.add(edgeId);
+          edge.isActive = true;
+          edge.targetOpacity = 1;
+          edge.lastActiveTime = now;
+        } else {
+          edge.isActive = false;
+          edge.targetOpacity = 0;
         }
       }
 
-      // Find new potential edges
+      // Second pass: find new potential edges
       const candidates: { id: string; i: number; j: number; d: number }[] = [];
       for (let i = 0; i < NODE_COUNT - 1; i++) {
         const a = nodes[i];
         for (let j = i + 1; j < NODE_COUNT; j++) {
           const edgeId = key(i, j);
-          if (validEdges.has(edgeId)) continue;
+          if (currentActiveEdges.has(edgeId)) continue;
           
           const b = nodes[j];
           const dx = torusDiff(a.x - b.x, width);
@@ -170,70 +197,84 @@ export default function TriangleNetwork() {
         }
       }
 
-      // Sort by distance and add valid new edges
+      // Sort by distance and create new persistent edges
       candidates.sort((p, q) => p.d - q.d);
       for (const { id, i, j } of candidates) {
         if (degree[i] < DEGREE_CAP && degree[j] < DEGREE_CAP) {
-          degree[i]++; 
+          degree[i]++;
           degree[j]++;
-          validEdges.add(id);
-        }
-      }
-
-      /* 3. update edge states */
-      // Mark current valid edges as active
-      for (const [edgeId, state] of edgeStates) {
-        state.active = validEdges.has(edgeId);
-      }
-
-      // Create new edge states for new edges
-      for (const edgeId of validEdges) {
-        if (!edgeStates.has(edgeId)) {
-          edgeStates.set(edgeId, { opacity: 0, active: true });
-        }
-      }
-
-      // Update opacities
-      const edgesToRemove: string[] = [];
-      for (const [edgeId, state] of edgeStates) {
-        if (state.active) {
-          // Fade in
-          state.opacity = Math.min(1, state.opacity + FADE_IN_SPEED * dt);
-        } else {
-          // Fade out
-          state.opacity = Math.max(0, state.opacity - FADE_OUT_SPEED * dt);
-          if (state.opacity <= 0) {
-            edgesToRemove.push(edgeId);
+          
+          // Create new persistent edge if it doesn't exist
+          if (!persistentEdges.has(id)) {
+            persistentEdges.set(id, {
+              i,
+              j,
+              opacity: 0,
+              targetOpacity: 1,
+              color: getEdgeColor(i, j),
+              lastActiveTime: now,
+              isActive: true
+            });
+          } else {
+            // Reactivate existing edge
+            const edge = persistentEdges.get(id)!;
+            edge.isActive = true;
+            edge.targetOpacity = 1;
+            edge.lastActiveTime = now;
           }
         }
       }
 
-      // Clean up fully faded edges
-      for (const edgeId of edgesToRemove) {
-        edgeStates.delete(edgeId);
+      /* 3. Update edge opacities smoothly */
+      const edgesToRemove: string[] = [];
+      for (const [edgeId, edge] of persistentEdges) {
+        // Smooth opacity transition
+        if (edge.opacity < edge.targetOpacity) {
+          edge.opacity = Math.min(edge.targetOpacity, edge.opacity + FADE_IN_SPEED * dt);
+        } else if (edge.opacity > edge.targetOpacity) {
+          edge.opacity = Math.max(edge.targetOpacity, edge.opacity - FADE_OUT_SPEED * dt);
+        }
+
+        // Remove edges that have been inactive and fully faded
+        if (!edge.isActive && edge.opacity <= 0 && (now - edge.lastActiveTime) > 1000) {
+          edgesToRemove.push(edgeId);
+        }
       }
 
-      /* 4. draw edges with smooth opacity */
-      ctx.lineWidth = 1;
-      for (const [edgeId, state] of edgeStates) {
-        if (state.opacity <= 0) continue;
+      // Clean up old edges
+      for (const edgeId of edgesToRemove) {
+        persistentEdges.delete(edgeId);
+      }
 
-        const [iStr, jStr] = edgeId.split('-');
-        const i = +iStr, j = +jStr;
-        const a = nodes[i], b = nodes[j];
+      /* 4. Draw persistent edges */
+      ctx.lineWidth = 1;
+      for (const [, edge] of persistentEdges) {
+        if (edge.opacity <= 0.01) continue;
+
+        const a = nodes[edge.i], b = nodes[edge.j];
         const dx = torusDiff(a.x - b.x, width);
         const dy = torusDiff(a.y - b.y, height);
         const d = Math.sqrt(dx*dx + dy*dy);
 
-        // Combine distance-based alpha with fade opacity
-        const distanceAlpha = 1 - d / LINK_DIST;
-        const finalAlpha = distanceAlpha * state.opacity;
+        // Combine distance-based alpha with persistent opacity
+        const distanceAlpha = Math.max(0, 1 - d / LINK_DIST);
+        const finalAlpha = distanceAlpha * edge.opacity;
 
-        ctx.strokeStyle = `rgba(139,69,19,${finalAlpha})`;
-        ctx.beginPath();
-        ctx.moveTo(a.x, a.y);
-        ctx.lineTo(a.x - dx, a.y - dy);
-        ctx.stroke();
+        if (finalAlpha > 0.01) {
+          // Parse the HSL color and add alpha
+          const hslMatch = edge.color.match(/hsl\((\d+), (\d+)%, (\d+)%\)/);
+          if (hslMatch) {
+            const [, h, s, l] = hslMatch;
+            ctx.strokeStyle = `hsla(${h}, ${s}%, ${l}%, ${finalAlpha})`;
+          } else {
+            ctx.strokeStyle = `rgba(139,69,19,${finalAlpha})`;
+          }
+          
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(a.x - dx, a.y - dy);
+          ctx.stroke();
+        }
       }
 
       /* 5. draw nodes */
@@ -251,14 +292,10 @@ export default function TriangleNetwork() {
       const newWidth = window.innerWidth;
       const newHeight = window.innerHeight;
       
-      // Only resize if dimensions actually changed significantly
-      // This prevents mobile browser UI changes from triggering resize
       const widthChange = Math.abs(newWidth - width) / width;
       const heightChange = Math.abs(newHeight - height) / height;
       
-      // Only resize if change is more than 5% or if it's a significant size change
       if (widthChange > 0.05 || heightChange > 0.05) {
-        // Debounce resize to prevent multiple rapid calls
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
           resizeCanvas();
@@ -267,39 +304,47 @@ export default function TriangleNetwork() {
             if (n.x > width) n.x = Math.random() * width;
             if (n.y > height) n.y = Math.random() * height;
           }
-          // Clear edge states to avoid weird connections during resize
-          edgeStates.clear();
+          // Don't clear persistent edges - they'll fade out naturally if invalid
         }, 100);
       }
     };
     
     /* ────────── MOBILE SCROLL PREVENTION ────────── */
-    const preventScroll = (e: TouchEvent | WheelEvent) => {
-      // Don't prevent pull-to-refresh at the top of the page
-      if (e.type === 'touchstart' || e.type === 'touchmove') {
-        const touch = (e as TouchEvent).touches[0];
-        if (touch && window.scrollY === 0 && e.type === 'touchstart') {
-          // Allow pull-to-refresh gesture at top of page
-          return;
+    const preventCanvasInterference = (e: TouchEvent) => {
+        if (e.target === canvas) {
+        e.preventDefault();
+        e.stopPropagation();
         }
-      }
-      e.preventDefault();
     };
-
-    // Prevent scrolling but allow pull-to-refresh
-    canvas.addEventListener('touchmove', preventScroll, { passive: false });
-    canvas.addEventListener('wheel', preventScroll, { passive: false });
-
+    
+    const preventWheelOnCanvas = (e: WheelEvent) => {
+        e.preventDefault();
+    };
+    
+    canvas.addEventListener('touchstart', preventCanvasInterference, { passive: false });
+    canvas.addEventListener('touchmove', preventCanvasInterference, { passive: false });
+    canvas.addEventListener('touchend', preventCanvasInterference, { passive: false });
+    canvas.addEventListener('wheel', preventWheelOnCanvas, { passive: false });
+    
+    const handleVisualViewportResize = () => {
+        handleResize();
+    };
+    
     window.addEventListener('resize', handleResize);
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', handleVisualViewportResize);
+    }
     
     return () => {
-      window.removeEventListener('resize', handleResize);
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', handleResize);
-      }
-      canvas.removeEventListener('touchmove', preventScroll);
-      canvas.removeEventListener('wheel', preventScroll);
-      clearTimeout(resizeTimeout);
+        window.removeEventListener('resize', handleResize);
+        if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', handleVisualViewportResize);
+        }
+        canvas.removeEventListener('touchstart', preventCanvasInterference);
+        canvas.removeEventListener('touchmove', preventCanvasInterference);
+        canvas.removeEventListener('touchend', preventCanvasInterference);
+        canvas.removeEventListener('wheel', preventWheelOnCanvas);
+        clearTimeout(resizeTimeout);
     };
   }, []);
 
@@ -308,8 +353,8 @@ export default function TriangleNetwork() {
       ref={canvasRef} 
       className="fixed inset-0 -z-10"
       style={{
-        touchAction: 'none', // Prevents scrolling/zooming on mobile
-        userSelect: 'none',  // Prevents text selection
+        touchAction: 'none',
+        userSelect: 'none',
         WebkitUserSelect: 'none',
         WebkitTouchCallout: 'none'
       }}
