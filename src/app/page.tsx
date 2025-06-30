@@ -55,7 +55,7 @@ export default function Home() {
             <br />
             <p className="text-gray-700">
               I am currently based in Philadelphia, Pennsylvania.
-              Outside of my professional life, I enjoy writing poetry, playing music with friends, plein-air painting, and watching movies.
+              Outside of my professional life, I enjoy writing poetry, playing music with friends, plein-air painting, film photography, and watching movies.
             </p>
           </div>
 
@@ -129,7 +129,7 @@ export default function Home() {
                   ))}
                 </ul>
               </div>
-              
+
               {/* AWS */}
               <div className="backdrop-filter backdrop-blur-sm bg-opacity-90 border border-yellow-400 shadow-md rounded-md p-4">
                 <h3 className="font-semibold text-lg mb-3 text-yellow-800">AWS</h3>
