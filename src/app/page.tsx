@@ -12,7 +12,15 @@ export default function Home() {
       {/* Hero Section */}
       <section className="py-20 pb-5 px-10">
         <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center gap-12">
-          <Image src="/profile.jpeg" alt="Profile" width={288} height={288} className="rounded-full border border-gray-300 shadow-lg" />
+          <div className="w-72 h-72 rounded-full overflow-hidden border border-gray-300 shadow-lg">
+            <Image 
+              src="/profile_film.jpeg" 
+              alt="Profile" 
+              width={288} 
+              height={288} 
+              className="w-full h-full object-cover"
+            />
+          </div>
           <div className="text-left">
             <h1 className="text-5xl font-bold mb-2 text-gray-900">Matthew Slipenchuk</h1>
             <p className="text-xl text-gray-700">Software Generalist.</p>
