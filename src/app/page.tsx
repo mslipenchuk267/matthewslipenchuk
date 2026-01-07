@@ -2,8 +2,10 @@ import Image from "next/image";
 import TriangleNetwork from "./components/TriangleNetwork";
 
 export default function Home() {
-  const glassTile = "bg-opacity-90 shadow-sm backdrop-filter backdrop-blur-[3px] rounded-md p-6 border border-gray-200";
-  const skillTile = "bg-opacity-90 shadow-sm backdrop-filter backdrop-blur-[3px] border-gray-300 border rounded-md px-3 py-1 text-sm w-fit inline-block"
+  const glassTile =
+    "bg-opacity-90 shadow-sm backdrop-filter backdrop-blur-[3px] rounded-md p-6 border border-gray-200";
+  const skillTile =
+    "bg-opacity-90 shadow-sm backdrop-filter backdrop-blur-[3px] border-gray-300 border rounded-md px-3 py-1 text-sm w-fit inline-block";
   const cloudSkillTile = `${skillTile} w-full text-center`;
 
   return (
@@ -13,38 +15,41 @@ export default function Home() {
       <section className="py-20 pb-5 px-10">
         <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center gap-12">
           <div className="w-72 h-72 rounded-full overflow-hidden border border-gray-300 shadow-lg">
-            <Image 
-              src="/profile_film.jpeg" 
-              alt="Profile" 
-              width={288} 
-              height={288} 
+            <Image
+              src="/profile_film.jpeg"
+              alt="Profile"
+              width={288}
+              height={288}
               className="w-full h-full object-cover"
             />
           </div>
           <div className="text-left">
-            <h1 className="text-5xl font-bold mb-2 text-gray-900">Matthew Slipenchuk</h1>
-            <p className="text-xl text-gray-700">Software Generalist.</p>
+            <h1 className="text-5xl font-bold mb-2 text-gray-900">
+              Matthew Slipenchuk
+            </h1>
+            <p className="text-xl text-gray-700">Software Engineer</p>
             <div className="text-left flex gap-4 mt-8">
               <a
                 href="mailto:mslipenchuk267@gmail.com"
-                className="inline-block backdrop-filter backdrop-blur-[3px] border border-gray-300 hover:bg-gray-100 hover:text-gray-900 font-medium py-2 px-4 rounded-md shadow transition"
+                className="inline-block backdrop-filter backdrop-blur-[3px] border border-blue-300 hover:bg-blue-100 hover:text-blue-900 font-medium py-2 px-4 rounded-md shadow transition"
               >
                 Email
               </a>
               <a
-                href="https://www.linkedin.com/in/matthew-slipenchuk/" target="_blank"
-                className="inline-block backdrop-filter backdrop-blur-[3px] border border-gray-300 hover:bg-gray-100 hover:text-gray-900 font-medium py-2 px-4 rounded-md shadow transition"
+                href="https://www.linkedin.com/in/matthew-slipenchuk/"
+                target="_blank"
+                className="inline-block backdrop-filter backdrop-blur-[3px] border border-blue-300 hover:bg-blue-100 hover:text-blue-900 font-medium py-2 px-4 rounded-md shadow transition"
               >
                 LinkedIn
               </a>
               <a
-                href="https://github.com/mslipenchuk267" target="_blank"
-                className="inline-block backdrop-filter backdrop-blur-[3px] border border-gray-300 hover:bg-gray-100 hover:text-gray-900 font-medium py-2 px-4 rounded-md shadow transition"
+                href="https://github.com/mslipenchuk267"
+                target="_blank"
+                className="inline-block backdrop-filter backdrop-blur-[3px] border border-blue-300 hover:bg-blue-100 hover:text-blue-900 font-medium py-2 px-4 rounded-md shadow transition"
               >
                 GitHub
               </a>
             </div>
-
           </div>
         </div>
       </section>
@@ -56,29 +61,48 @@ export default function Home() {
           {/* About Card */}
           <div className={glassTile}>
             <h2 className="text-2xl font-semibold mb-3">About Me</h2>
-            <p className="text-gray-700">I&apos;m a Software Engineer with 6 years of experience in the healthcare and medical device industry. 
-              I have built full-stack solutions across distributed service based architectures. 
-              My work spans from embedded systems to cloud services. I have led frontend and backend teams, implented secure communication systems, high-volume data pipelines, and bespoke visualizations.
+            <p>
+              I&apos;m a Software Engineer with 7 years of experience in the
+              healthcare and medical device industry. I have built full-stack
+              solutions across distributed service based architectures. My work
+              spans from embedded systems to cloud services. I have led frontend
+              and backend teams, implented secure communication systems,
+              high-volume data pipelines, and bespoke visualizations.
             </p>
             <br />
-            <p className="text-gray-700">
-              I am currently based in Philadelphia, Pennsylvania.
-              Outside of my professional life, I enjoy writing poetry, playing music with friends, plein-air painting, film photography, and watching movies.
+            <p>
+              I am currently based in Philadelphia, Pennsylvania. I enjoy
+              writing poetry, playing music with friends, plein-air painting,
+              film photography, and watching movies.
             </p>
           </div>
 
           {/* Paper Card */}
           <div className={glassTile}>
             <h2 className="text-2xl font-semibold mb-3">Publications</h2>
-            <a href="https://www.nature.com/articles/s41390-024-03287-0" className="text-blue-700 underline hover:no-underline" target="_blank">&quot;Assessment of Extremely Premature Lambs Supported by the Extrauterine Environment for Neonatal Development (EXTEND)&quot;</a>
+            <a
+              href="https://www.nature.com/articles/s41390-024-03287-0"
+              className="text-blue-700 underline hover:no-underline"
+              target="_blank"
+            >
+              &quot;Assessment of Extremely Premature Lambs Supported by the
+              Extrauterine Environment for Neonatal Development (EXTEND)&quot;
+            </a>
             <p>Nature, Pediatric Research 2024.</p>
           </div>
 
           {/* Patent Card */}
           <div className={glassTile}>
             <h2 className="text-2xl font-semibold mb-3">Patents</h2>
-            <a href="https://patentscope.wipo.int/search/en/detail.jsf?docId=WO2023225684&_cid=P20-LTP5V7-75360-1" className="text-blue-700 underline hover:no-underline" target="_blank">&quot;Method and Device for Measuring Oxygen Saturation&quot;</a>
-            <p >International Patent Application No. PCT/US2023/067310</p>
+            <a
+              href="https://patents.justia.com/patent/20250360251"
+              className="text-blue-700 underline hover:no-underline"
+              target="_blank"
+            >
+              &quot;Method and Device for Measuring Oxygen Saturation&quot;
+            </a>
+            <p>International Patent Publication No. 20250360251</p>
+            <p>Publication Date: Nov. 27, 2025. </p>
           </div>
         </div>
 
@@ -90,7 +114,18 @@ export default function Home() {
           <div className="mb-10 relative">
             <h3 className="font-semibold text-lg mb-2">Languages</h3>
             <ul className="flex flex-wrap gap-2">
-              {['C++ 11/17', 'Python', 'Golang', 'JavaScript', 'TypeScript', 'R', 'C', 'Matlab', 'Ruby', 'VBS', 'HTML', 'CSS', 'Bash'].map((lang) => (
+              {[
+                "C++ 11/17",
+                "Python",
+                "TypeScript",
+                "JavaScript",
+                "Golang",
+                "R",
+                "C",
+                "Matlab",
+                "Ruby",
+                "Bash",
+              ].map((lang) => (
                 <li key={lang} className={skillTile}>
                   {lang}
                 </li>
@@ -102,7 +137,16 @@ export default function Home() {
           <div className="mb-10 relative">
             <h3 className="font-semibold text-lg mb-2">Frameworks</h3>
             <ul className="flex flex-wrap gap-2">
-              {['Qt', 'Vue', 'FastAPI', 'Next.js', 'React', 'React Native', 'Flask', 'Ruby on Rails'].map((framework) => (
+              {[
+                "FastAPI",
+                "React",
+                "Next.js",
+                "Qt",
+                "Vue",
+                "React Native",
+                "Flask",
+                "Ruby on Rails",
+              ].map((framework) => (
                 <li key={framework} className={skillTile}>
                   {framework}
                 </li>
@@ -112,9 +156,40 @@ export default function Home() {
 
           {/* Databases */}
           <div className="mb-10 relative">
-            <h3 className="font-semibold text-lg mb-2">Database Technologies</h3>
+            <h3 className="font-semibold text-lg mb-2">
+              Database Technologies
+            </h3>
             <ul className="flex flex-wrap gap-2">
-              {['PostgreSQL', 'SQLite', 'Redis', 'DuckDB', 'Spark', 'Databricks'].map((db) => (
+              {[
+                "PostgreSQL",
+                "SQLite",
+                "Redis",
+                "DuckDB",
+                "Spark",
+                "Databricks",
+              ].map((db) => (
+                <li key={db} className={skillTile}>
+                  {db}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* DevOps */}
+          <div className="mb-10 relative">
+            <h3 className="font-semibold text-lg mb-2">DevOps</h3>
+            <ul className="flex flex-wrap gap-2">
+              {[
+                "Docker",
+                "Docker Compose",
+                "Terraform",
+                "Github Actions",
+                "Bitbucket Pipelines",
+                "Loki",
+                "Grafana",
+                "Tempo",
+                "Prometheus",
+              ].map((db) => (
                 <li key={db} className={skillTile}>
                   {db}
                 </li>
@@ -125,12 +200,20 @@ export default function Home() {
           {/* Cloud Services */}
           <div className="mb-10 relative w-fit inline-block">
             <h3 className="font-semibold text-lg mb-2">Cloud Services</h3>
-            <div className="grid grid-cols-2 w-fit gap-4">
+            <div className="grid grid-cols-3 w-fit gap-4">
               {/* Azure */}
-              <div className="backdrop-filter backdrop-blur-sm bg-opacity-90  border border-blue-400 shadow-md rounded-md p-4">
-                <h3 className="font-semibold text-lg mb-3 text-blue-800">Azure</h3>
+              <div className="backdrop-filter backdrop-blur-xs bg-opacity-90  border border-blue-400 shadow-md rounded-md p-4">
+                <h3 className="font-semibold text-lg mb-3 text-blue-800">
+                  Azure
+                </h3>
                 <ul className="flex flex-col gap-2">
-                  {['Data Lake', 'Virtual Machine', 'IoT Hub', 'App Service', 'Container Registry'].map((service) => (
+                  {[
+                    "Data Lake",
+                    "Virtual Machine",
+                    "IoT Hub",
+                    "Container Registry",
+                    "App Service",
+                  ].map((service) => (
                     <li key={service} className={cloudSkillTile}>
                       {service}
                     </li>
@@ -139,14 +222,34 @@ export default function Home() {
               </div>
 
               {/* AWS */}
-              <div className="backdrop-filter backdrop-blur-sm bg-opacity-90 border border-yellow-400 shadow-md rounded-md p-4">
-                <h3 className="font-semibold text-lg mb-3 text-yellow-800">AWS</h3>
+              <div className="backdrop-filter backdrop-blur-xs bg-opacity-90 border border-orange-400 shadow-md rounded-md p-4">
+                <h3 className="font-semibold text-lg mb-3 text-gray-700">
+                  AWS
+                </h3>
                 <ul className="flex flex-col gap-2">
-                  {['S3', 'EC2', 'ECS', 'EKS'].map((service) => (
-                    <li key={service} className={cloudSkillTile}>
-                      {service}
-                    </li>
-                  ))}
+                  {["S3", "EC2", "Amplify", "ECS", "ELB", "EKS"].map(
+                    (service) => (
+                      <li key={service} className={cloudSkillTile}>
+                        {service}
+                      </li>
+                    )
+                  )}
+                </ul>
+              </div>
+
+              {/* GCP */}
+              <div className="backdrop-filter backdrop-blur-xs bg-opacity-90 border border-gray-300 shadow-md rounded-md p-4">
+                <h3 className="font-semibold text-lg mb-3 text-green-800">
+                  GCP
+                </h3>
+                <ul className="flex flex-col gap-2">
+                  {["Firebase", "BigQuery", "Dataform", "Looker"].map(
+                    (service) => (
+                      <li key={service} className={cloudSkillTile}>
+                        {service}
+                      </li>
+                    )
+                  )}
                 </ul>
               </div>
             </div>
@@ -156,7 +259,7 @@ export default function Home() {
           <div className="mb-10 relative">
             <h3 className="font-semibold text-lg mb-2">IoT</h3>
             <ul className="flex flex-wrap gap-2">
-              {['MQTT', 'PlatformIO', 'Arduino', 'Raspberry Pi'].map((tech) => (
+              {["MQTT", "PlatformIO", "Arduino", "Raspberry Pi"].map((tech) => (
                 <li key={tech} className={skillTile}>
                   {tech}
                 </li>
