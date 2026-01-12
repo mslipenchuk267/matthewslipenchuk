@@ -198,9 +198,9 @@ export default function Home() {
           </div>
 
           {/* Cloud Services */}
-          <div className="mb-10 relative w-fit inline-block">
+          <div className="mb-10 relative w-full max-w-full sm:w-fit inline-block">
             <h3 className="font-semibold text-lg mb-2">Cloud Services</h3>
-            <div className="grid grid-cols-3 w-fit gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 w-full max-w-full sm:w-fit gap-4">
               {/* Azure */}
               <div className="backdrop-filter backdrop-blur-xs bg-opacity-90  border border-blue-400 shadow-md rounded-md p-4">
                 <h3 className="font-semibold text-lg mb-3 text-blue-800">
