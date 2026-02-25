@@ -77,6 +77,21 @@ export default function Home() {
             </p>
           </div>
 
+          {/* What I'm Working On Card */}
+          <div className={glassTile}>
+            <h2 className="text-2xl font-semibold mb-3">What I&apos;m Working On</h2>
+            <p>
+              I am developing an agentic assistant outside of the OpenClaw
+              ecosystem. I also provide consultation on AI workflow, custom
+              harnessing, and integrations.
+            </p>
+            <ul className="flex flex-wrap gap-2 mt-4">
+              {["OpenAI API", "Anthropic API", "Deepseek API", "Claude Code", "Codex", "Slack"].map((tool) => (
+                <li key={tool} className={skillTile}>{tool}</li>
+              ))}
+            </ul>
+          </div>
+
           {/* Paper Card */}
           <div className={glassTile}>
             <h2 className="text-2xl font-semibold mb-3">Publications</h2>
@@ -104,6 +119,7 @@ export default function Home() {
             <p>International Patent Publication No. 20250360251</p>
             <p>Publication Date: Nov. 27, 2025. </p>
           </div>
+
         </div>
 
         {/* Right Side - Timeline */}
