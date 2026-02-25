@@ -165,11 +165,31 @@ export default function Home() {
                 "SQLite",
                 "Redis",
                 "DuckDB",
-                "Spark",
+                "PySpark",
                 "Databricks",
               ].map((db) => (
                 <li key={db} className={skillTile}>
                   {db}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Infrastructure */}
+          <div className="mb-10 relative">
+            <h3 className="font-semibold text-lg mb-2">Infrastructure</h3>
+            <ul className="flex flex-wrap gap-2">
+              {[
+                "Docker",
+                "Docker Compose",
+                "Terraform",
+                "Kubernetes",
+                "KinD",
+                "Knative",
+                "Kourier",
+              ].map((tech) => (
+                <li key={tech} className={skillTile}>
+                  {tech}
                 </li>
               ))}
             </ul>
@@ -180,15 +200,13 @@ export default function Home() {
             <h3 className="font-semibold text-lg mb-2">DevOps</h3>
             <ul className="flex flex-wrap gap-2">
               {[
-                "Docker",
-                "Docker Compose",
-                "Terraform",
                 "Github Actions",
                 "Bitbucket Pipelines",
+                "OpenTelemetry",
                 "Loki",
-                "Grafana",
                 "Tempo",
                 "Prometheus",
+                "Grafana",
               ].map((db) => (
                 <li key={db} className={skillTile}>
                   {db}
@@ -227,7 +245,7 @@ export default function Home() {
                   AWS
                 </h3>
                 <ul className="flex flex-col gap-2">
-                  {["S3", "EC2", "Amplify", "ECS", "ELB", "EKS"].map(
+                  {["S3", "EC2", "Amplify", "ECS", "ELB", "EKS", "CloudFront", "Route 53", "Certificate Manager"].map(
                     (service) => (
                       <li key={service} className={cloudSkillTile}>
                         {service}
