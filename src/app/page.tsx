@@ -79,15 +79,25 @@ export default function Home() {
 
           {/* What I'm Working On Card */}
           <div className={glassTile}>
-            <h2 className="text-2xl font-semibold mb-3">What I&apos;m Working On</h2>
+            <h2 className="text-2xl font-semibold mb-3">
+              What I&apos;m Working On
+            </h2>
             <p>
               I am developing an agentic assistant outside of the OpenClaw
               ecosystem. I also provide consultation on AI workflow, custom
               harnessing, and integrations.
             </p>
             <ul className="flex flex-wrap gap-2 mt-4">
-              {["OpenAI API", "Anthropic API", "Deepseek API", "Claude Code", "Codex", "Slack"].map((tool) => (
-                <li key={tool} className={skillTile}>{tool}</li>
+              {[
+                "OpenAI API",
+                "Anthropic API",
+                "Deepseek API",
+                "Claude Code",
+                "Codex",
+              ].map((tool) => (
+                <li key={tool} className={skillTile}>
+                  {tool}
+                </li>
               ))}
             </ul>
           </div>
@@ -119,7 +129,6 @@ export default function Home() {
             <p>International Patent Publication No. 20250360251</p>
             <p>Publication Date: Nov. 27, 2025. </p>
           </div>
-
         </div>
 
         {/* Right Side - Timeline */}
@@ -172,9 +181,7 @@ export default function Home() {
 
           {/* Databases */}
           <div className="mb-10 relative">
-            <h3 className="font-semibold text-lg mb-2">
-              Database Technologies
-            </h3>
+            <h3 className="font-semibold text-lg mb-2">Databases</h3>
             <ul className="flex flex-wrap gap-2">
               {[
                 "PostgreSQL",
@@ -261,13 +268,21 @@ export default function Home() {
                   AWS
                 </h3>
                 <ul className="flex flex-col gap-2">
-                  {["S3", "EC2", "Amplify", "ECS", "ELB", "EKS", "CloudFront", "Route 53", "Certificate Manager"].map(
-                    (service) => (
-                      <li key={service} className={cloudSkillTile}>
-                        {service}
-                      </li>
-                    )
-                  )}
+                  {[
+                    "S3",
+                    "EC2",
+                    "Amplify",
+                    "ECS",
+                    "ELB",
+                    "EKS",
+                    "CloudFront",
+                    "Route 53",
+                    "Certificate Manager",
+                  ].map((service) => (
+                    <li key={service} className={cloudSkillTile}>
+                      {service}
+                    </li>
+                  ))}
                 </ul>
               </div>
 
@@ -282,7 +297,7 @@ export default function Home() {
                       <li key={service} className={cloudSkillTile}>
                         {service}
                       </li>
-                    )
+                    ),
                   )}
                 </ul>
               </div>
