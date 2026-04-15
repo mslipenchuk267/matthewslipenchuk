@@ -49,6 +49,13 @@ export default function Home() {
               >
                 GitHub
               </a>
+              <a
+                href="/Matthew Slipenchuk Resume 2026.pdf"
+                target="_blank"
+                className="inline-block backdrop-filter backdrop-blur-[3px] border border-blue-300 hover:bg-blue-100 hover:text-blue-900 font-medium py-2 px-4 rounded-md shadow transition"
+              >
+                Resume
+              </a>
             </div>
           </div>
         </div>
