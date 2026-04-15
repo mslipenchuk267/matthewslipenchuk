@@ -12,7 +12,7 @@ export default function Home() {
     <div className="min-h-screen font-sans">
       <TriangleNetwork />
       {/* Hero Section */}
-      <section className="py-20 pb-5 px-10">
+      <section className="py-20 pb-5 px-6 sm:px-10">
         <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center gap-12">
           <div className="w-72 h-72 rounded-full overflow-hidden border border-gray-300 shadow-lg">
             <Image
@@ -28,7 +28,7 @@ export default function Home() {
               Matthew Slipenchuk
             </h1>
             <p className="text-xl text-gray-700">Software Engineer</p>
-            <div className="text-left flex gap-4 mt-8">
+            <div className="text-left flex flex-wrap gap-4 mt-8">
               <a
                 href="mailto:mslipenchuk267@gmail.com"
                 className="inline-block backdrop-filter backdrop-blur-[3px] border border-blue-300 hover:bg-blue-100 hover:text-blue-900 font-medium py-2 px-4 rounded-md shadow transition"
@@ -59,7 +59,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+          </section>
 
       {/* Main Section */}
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 my-16 px-6">
