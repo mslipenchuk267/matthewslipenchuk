@@ -62,18 +62,23 @@ export default function Home() {
           <div className={glassTile}>
             <h2 className="text-2xl font-semibold mb-3">About Me</h2>
             <p>
-              I&apos;m a Software Engineer with 7 years of experience in the
-              healthcare and medical device industry. I have built full-stack
-              solutions across distributed service based architectures. My work
-              spans from embedded systems to cloud services. I have led frontend
-              and backend teams, implented secure communication systems,
-              high-volume data pipelines, and bespoke visualizations.
+              I&apos;m a Software Engineer with 7 years of experience in
+              FDA-regulated medical device and healthcare development, including
+              Class III device software, 510(k), and IDE filings across 7
+              submissions. My work spans from sensor systems and embedded
+              firmware to industrial desktop applications, cloud-native
+              services, ML/RL pipelines, and agent solutions. I&apos;ve led
+              frontend and backend teams, taken devices from initial prototyping
+              through benchtop characterization, ML calibration, and wet lab
+              validation. I am no stranger to stepping into products
+              mid-development, replacing engines while keeping the software
+              program and timelines in flight.
             </p>
             <br />
             <p>
-              I am currently based in Philadelphia, Pennsylvania. I enjoy
-              writing poetry, playing music with friends, plein-air painting,
-              film photography, and watching movies.
+              I am currently based in Philadelphia, Pennsylvania. Outside of
+              work, I enjoy writing poetry, playing guitar, painting, film
+              photography, and watching movies.
             </p>
           </div>
 
@@ -83,17 +88,47 @@ export default function Home() {
               What I&apos;m Working On
             </h2>
             <p>
-              I am developing an agentic assistant outside of the OpenClaw
-              ecosystem. I also provide consultation on AI workflow, custom
-              harnessing, and integrations.
+              I&apos;m building a multi-agent workspace based on Andrej
+              Karpathy&apos;s{" "}
+              <a
+                href="https://x.com/karpathy/status/2039805659525644595"
+                target="_blank"
+                className="text-blue-700 underline hover:no-underline"
+              >
+                LLM Wiki
+              </a>{" "}
+              concept. Specialized agents conduct research, analyze your
+              documents, and write code, then compile the output into a clean,
+              interlinked Markdown wiki with an evolving ontology. All code
+              execution runs in sandboxed microVMs, and a human-in-the-loop
+              workflow ensures you review every staged diff or summary before it
+              commits. You can kick off deep research, request custom analysis,
+              or query the entire history through Slack or WhatsApp. Because
+              every interaction feeds back into the graph, the system builds
+              persistent context that gets more useful the longer you run it.
+            </p>
+            <br />
+            <p>
+              I am also building a product in the attestation and provenance
+              space to aid post-AI org charts at my company{" "}
+              <a
+                href="https://vadum.io"
+                target="_blank"
+                className="text-blue-700 underline hover:no-underline"
+              >
+                Vadum
+              </a>
+              , where I also offer software &amp; device engineering
+              consultation, as well as custom agent integrations, harnessing,
+              and RAG solutions.
             </p>
             <ul className="flex flex-wrap gap-2 mt-4">
               {[
                 "OpenAI API",
                 "Anthropic API",
                 "Deepseek API",
-                "Claude Code",
-                "Codex",
+                "Gemini API",
+                "OpenRouter",
               ].map((tool) => (
                 <li key={tool} className={skillTile}>
                   {tool}
@@ -179,6 +214,18 @@ export default function Home() {
             </ul>
           </div>
 
+          {/* Agentic Engineering */}
+          <div className="mb-10 relative">
+            <h3 className="font-semibold text-lg mb-2">Agentic Engineering</h3>
+            <ul className="flex flex-wrap gap-2">
+              {["Claude Code", "Codex", "Amp Code"].map((tool) => (
+                <li key={tool} className={skillTile}>
+                  {tool}
+                </li>
+              ))}
+            </ul>
+          </div>
+
           {/* Databases */}
           <div className="mb-10 relative">
             <h3 className="font-semibold text-lg mb-2">Databases</h3>
@@ -249,10 +296,11 @@ export default function Home() {
                 </h3>
                 <ul className="flex flex-col gap-2">
                   {[
-                    "Data Lake",
+                    "ADLSv2",
                     "Virtual Machine",
                     "IoT Hub",
-                    "Container Registry",
+                    "ACR",
+                    "AKS",
                     "App Service",
                   ].map((service) => (
                     <li key={service} className={cloudSkillTile}>
