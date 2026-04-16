@@ -31,28 +31,28 @@ export default function Home() {
             <div className="text-left flex flex-wrap gap-4 mt-8">
               <a
                 href="mailto:mslipenchuk267@gmail.com"
-                className="inline-block backdrop-filter backdrop-blur-[3px] border border-[#f0c040] text-[#f0c040] hover:bg-[#f0c040]/10 font-medium py-2 px-4 rounded-md shadow transition"
+                className="inline-block backdrop-filter backdrop-blur-[3px] border border-blue-300 hover:bg-blue-100 hover:text-blue-900 dark:border-[#f0c040] dark:text-[#f0c040] dark:hover:bg-[#f0c040]/10 dark:hover:text-[#f0c040] font-medium py-2 px-4 rounded-md shadow transition"
               >
                 Email
               </a>
               <a
                 href="https://www.linkedin.com/in/matthew-slipenchuk/"
                 target="_blank"
-                className="inline-block backdrop-filter backdrop-blur-[3px] border border-[#f0c040] text-[#f0c040] hover:bg-[#f0c040]/10 font-medium py-2 px-4 rounded-md shadow transition"
+                className="inline-block backdrop-filter backdrop-blur-[3px] border border-blue-300 hover:bg-blue-100 hover:text-blue-900 dark:border-[#f0c040] dark:text-[#f0c040] dark:hover:bg-[#f0c040]/10 dark:hover:text-[#f0c040] font-medium py-2 px-4 rounded-md shadow transition"
               >
                 LinkedIn
               </a>
               <a
                 href="https://github.com/mslipenchuk267"
                 target="_blank"
-                className="inline-block backdrop-filter backdrop-blur-[3px] border border-[#f0c040] text-[#f0c040] hover:bg-[#f0c040]/10 font-medium py-2 px-4 rounded-md shadow transition"
+                className="inline-block backdrop-filter backdrop-blur-[3px] border border-blue-300 hover:bg-blue-100 hover:text-blue-900 dark:border-[#f0c040] dark:text-[#f0c040] dark:hover:bg-[#f0c040]/10 dark:hover:text-[#f0c040] font-medium py-2 px-4 rounded-md shadow transition"
               >
                 GitHub
               </a>
               <a
                 href="/Matthew Slipenchuk Resume 2026.pdf"
                 target="_blank"
-                className="inline-block backdrop-filter backdrop-blur-[3px] border border-[#f0c040] text-[#f0c040] hover:bg-[#f0c040]/10 font-medium py-2 px-4 rounded-md shadow transition"
+                className="inline-block backdrop-filter backdrop-blur-[3px] border border-blue-300 hover:bg-blue-100 hover:text-blue-900 dark:border-[#f0c040] dark:text-[#f0c040] dark:hover:bg-[#f0c040]/10 dark:hover:text-[#f0c040] font-medium py-2 px-4 rounded-md shadow transition"
               >
                 Resume
               </a>
@@ -109,7 +109,7 @@ export default function Home() {
               <a
                 href="https://x.com/karpathy/status/2039805659525644595"
                 target="_blank"
-                className="text-[#f0c040] underline hover:no-underline"
+                className="text-blue-700 dark:text-[#f0c040] underline hover:no-underline"
               >
                 LLM Wiki
               </a>{" "}
@@ -130,7 +130,7 @@ export default function Home() {
               <a
                 href="https://vadum.io"
                 target="_blank"
-                className="text-[#f0c040] underline hover:no-underline"
+                className="text-blue-700 dark:text-[#f0c040] underline hover:no-underline"
               >
                 Vadum
               </a>
@@ -158,7 +158,7 @@ export default function Home() {
             <h2 className="text-2xl font-semibold mb-3">Publications</h2>
             <a
               href="https://www.nature.com/articles/s41390-024-03287-0"
-              className="text-[#f0c040] underline hover:no-underline"
+              className="text-blue-700 dark:text-[#f0c040] underline hover:no-underline"
               target="_blank"
             >
               &quot;Assessment of Extremely Premature Lambs Supported by the
@@ -172,7 +172,7 @@ export default function Home() {
             <h2 className="text-2xl font-semibold mb-3">Patents</h2>
             <a
               href="https://patents.justia.com/patent/20250360251"
-              className="text-[#f0c040] underline hover:no-underline"
+              className="text-blue-700 dark:text-[#f0c040] underline hover:no-underline"
               target="_blank"
             >
               &quot;Method and Device for Measuring Oxygen Saturation&quot;
