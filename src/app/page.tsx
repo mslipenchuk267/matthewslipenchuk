@@ -3,9 +3,9 @@ import TriangleNetwork from "./components/TriangleNetwork";
 
 export default function Home() {
   const glassTile =
-    "bg-opacity-90 shadow-sm backdrop-filter backdrop-blur-[3px] rounded-md p-6 border border-gray-200";
+    "bg-opacity-90 dark:bg-white/5 shadow-sm backdrop-filter backdrop-blur-[3px] rounded-md p-6 border border-gray-200 dark:border-gray-700";
   const skillTile =
-    "bg-opacity-90 shadow-sm backdrop-filter backdrop-blur-[3px] border-gray-300 border rounded-md px-3 py-1 text-sm w-fit inline-block";
+    "bg-opacity-90 dark:bg-white/5 shadow-sm backdrop-filter backdrop-blur-[3px] border-gray-300 dark:border-gray-600 border rounded-md px-3 py-1 text-sm w-fit inline-block";
   const cloudSkillTile = `${skillTile} w-full text-center`;
 
   return (
@@ -14,7 +14,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="py-20 pb-5 px-6 sm:px-10">
         <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center gap-12">
-          <div className="w-72 h-72 rounded-full overflow-hidden border border-gray-300 shadow-lg">
+          <div className="w-72 h-72 rounded-full overflow-hidden border border-gray-300 dark:border-gray-600 shadow-lg">
             <Image
               src="/profile_film.jpeg"
               alt="Profile"
@@ -24,35 +24,35 @@ export default function Home() {
             />
           </div>
           <div className="text-left">
-            <h1 className="text-5xl font-bold mb-2 text-gray-900">
+            <h1 className="text-5xl font-bold mb-2 text-gray-900 dark:text-gray-100">
               Matthew Slipenchuk
             </h1>
-            <p className="text-xl text-gray-700">Software Engineer</p>
+            <p className="text-xl text-gray-700 dark:text-gray-300">Software Engineer</p>
             <div className="text-left flex flex-wrap gap-4 mt-8">
               <a
                 href="mailto:mslipenchuk267@gmail.com"
-                className="inline-block backdrop-filter backdrop-blur-[3px] border border-blue-300 hover:bg-blue-100 hover:text-blue-900 font-medium py-2 px-4 rounded-md shadow transition"
+                className="inline-block backdrop-filter backdrop-blur-[3px] border border-[#f0c040] text-[#f0c040] hover:bg-[#f0c040]/10 font-medium py-2 px-4 rounded-md shadow transition"
               >
                 Email
               </a>
               <a
                 href="https://www.linkedin.com/in/matthew-slipenchuk/"
                 target="_blank"
-                className="inline-block backdrop-filter backdrop-blur-[3px] border border-blue-300 hover:bg-blue-100 hover:text-blue-900 font-medium py-2 px-4 rounded-md shadow transition"
+                className="inline-block backdrop-filter backdrop-blur-[3px] border border-[#f0c040] text-[#f0c040] hover:bg-[#f0c040]/10 font-medium py-2 px-4 rounded-md shadow transition"
               >
                 LinkedIn
               </a>
               <a
                 href="https://github.com/mslipenchuk267"
                 target="_blank"
-                className="inline-block backdrop-filter backdrop-blur-[3px] border border-blue-300 hover:bg-blue-100 hover:text-blue-900 font-medium py-2 px-4 rounded-md shadow transition"
+                className="inline-block backdrop-filter backdrop-blur-[3px] border border-[#f0c040] text-[#f0c040] hover:bg-[#f0c040]/10 font-medium py-2 px-4 rounded-md shadow transition"
               >
                 GitHub
               </a>
               <a
                 href="/Matthew Slipenchuk Resume 2026.pdf"
                 target="_blank"
-                className="inline-block backdrop-filter backdrop-blur-[3px] border border-blue-300 hover:bg-blue-100 hover:text-blue-900 font-medium py-2 px-4 rounded-md shadow transition"
+                className="inline-block backdrop-filter backdrop-blur-[3px] border border-[#f0c040] text-[#f0c040] hover:bg-[#f0c040]/10 font-medium py-2 px-4 rounded-md shadow transition"
               >
                 Resume
               </a>
@@ -87,6 +87,15 @@ export default function Home() {
               work, I enjoy writing poetry, playing guitar, painting, film
               photography, and watching movies.
             </p>
+            <hr className="my-4 border-gray-200 dark:border-gray-700" />
+            <h3 className="font-semibold text-sm mb-2">Spoken Languages</h3>
+            <ul className="flex flex-wrap gap-2">
+              {["English", "Russian"].map((lang) => (
+                <li key={lang} className={skillTile}>
+                  {lang}
+                </li>
+              ))}
+            </ul>
           </div>
 
           {/* What I'm Working On Card */}
@@ -100,7 +109,7 @@ export default function Home() {
               <a
                 href="https://x.com/karpathy/status/2039805659525644595"
                 target="_blank"
-                className="text-blue-700 underline hover:no-underline"
+                className="text-[#f0c040] underline hover:no-underline"
               >
                 LLM Wiki
               </a>{" "}
@@ -121,7 +130,7 @@ export default function Home() {
               <a
                 href="https://vadum.io"
                 target="_blank"
-                className="text-blue-700 underline hover:no-underline"
+                className="text-[#f0c040] underline hover:no-underline"
               >
                 Vadum
               </a>
@@ -149,7 +158,7 @@ export default function Home() {
             <h2 className="text-2xl font-semibold mb-3">Publications</h2>
             <a
               href="https://www.nature.com/articles/s41390-024-03287-0"
-              className="text-blue-700 underline hover:no-underline"
+              className="text-[#f0c040] underline hover:no-underline"
               target="_blank"
             >
               &quot;Assessment of Extremely Premature Lambs Supported by the
@@ -163,7 +172,7 @@ export default function Home() {
             <h2 className="text-2xl font-semibold mb-3">Patents</h2>
             <a
               href="https://patents.justia.com/patent/20250360251"
-              className="text-blue-700 underline hover:no-underline"
+              className="text-[#f0c040] underline hover:no-underline"
               target="_blank"
             >
               &quot;Method and Device for Measuring Oxygen Saturation&quot;
@@ -175,7 +184,7 @@ export default function Home() {
 
         {/* Right Side - Timeline */}
         <div className="relative pl-8">
-          <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-gray-300"></div>
+          <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-gray-300 dark:bg-gray-600"></div>
 
           {/* Languages */}
           <div className="mb-10 relative">
@@ -297,8 +306,8 @@ export default function Home() {
             <h3 className="font-semibold text-lg mb-2">Cloud Services</h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 w-full max-w-full sm:w-fit gap-4">
               {/* Azure */}
-              <div className="backdrop-filter backdrop-blur-xs bg-opacity-90  border border-blue-400 shadow-md rounded-md p-4">
-                <h3 className="font-semibold text-lg mb-3 text-blue-800">
+              <div className="backdrop-filter backdrop-blur-xs bg-opacity-90 dark:bg-white/5  border border-blue-400 dark:border-blue-600 shadow-md rounded-md p-4">
+                <h3 className="font-semibold text-lg mb-3 text-blue-800 dark:text-blue-300">
                   Azure
                 </h3>
                 <ul className="flex flex-col gap-2">
@@ -318,8 +327,8 @@ export default function Home() {
               </div>
 
               {/* AWS */}
-              <div className="backdrop-filter backdrop-blur-xs bg-opacity-90 border border-orange-400 shadow-md rounded-md p-4">
-                <h3 className="font-semibold text-lg mb-3 text-gray-700">
+              <div className="backdrop-filter backdrop-blur-xs bg-opacity-90 dark:bg-white/5 border border-orange-400 dark:border-orange-600 shadow-md rounded-md p-4">
+                <h3 className="font-semibold text-lg mb-3 text-gray-700 dark:text-gray-300">
                   AWS
                 </h3>
                 <ul className="flex flex-col gap-2">
@@ -342,8 +351,8 @@ export default function Home() {
               </div>
 
               {/* GCP */}
-              <div className="backdrop-filter backdrop-blur-xs bg-opacity-90 border border-gray-300 shadow-md rounded-md p-4">
-                <h3 className="font-semibold text-lg mb-3 text-green-800">
+              <div className="backdrop-filter backdrop-blur-xs bg-opacity-90 dark:bg-white/5 border border-gray-300 dark:border-gray-500 shadow-md rounded-md p-4">
+                <h3 className="font-semibold text-lg mb-3 text-green-800 dark:text-green-400">
                   GCP
                 </h3>
                 <ul className="flex flex-col gap-2">
@@ -370,6 +379,7 @@ export default function Home() {
               ))}
             </ul>
           </div>
+
         </div>
       </div>
     </div>

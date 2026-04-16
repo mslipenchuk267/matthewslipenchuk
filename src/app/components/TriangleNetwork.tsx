@@ -11,6 +11,7 @@ export default function TriangleNetwork() {
 
     /* detect coarse pointers (most phones / tablets) */
     const isMobile = window.matchMedia('(pointer: coarse)').matches;
+    const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
     /* retina-proof sizing - MOBILE-FOCUSED METHOD */
     let width = 0, height = 0;
@@ -396,7 +397,7 @@ export default function TriangleNetwork() {
       }
 
       /* 5. draw nodes */
-      ctx.fillStyle = '#8B4513';
+      ctx.fillStyle = isDark ? '#d4a574' : '#8B4513';
       for (const n of nodes) ctx.fillRect(n.x - 1, n.y - 1, 2, 2);
 
       requestAnimationFrame(animate);
